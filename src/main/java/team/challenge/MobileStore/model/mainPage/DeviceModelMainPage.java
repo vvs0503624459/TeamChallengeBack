@@ -19,7 +19,7 @@ import java.util.List;
  * @param sameDevices   - DTOs with information about same devices with different colors.
  */
 public record DeviceModelMainPage(
-        //todo чому price BidDecimal? ReviewsDTO? Багато DTO?
+        //todo чому price BidDecimal? ReviewsDTO? Багато DTO? Fullname of model?
         String id,
         String fullNameModel,
         String mainPhotoUri,
