@@ -1,4 +1,4 @@
-package team.challenge.MobileStore;
+package team.challenge.MobileStore.temp;
 
 import com.mongodb.*;
 import com.mongodb.client.MongoClient;
