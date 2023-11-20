@@ -23,6 +23,7 @@ public class Device {
     List<String> uriPhotos;
     Integer price;
     Integer discount;
+    String deviceCode;
     @DocumentReference
     List<Review> reviews;
 }
