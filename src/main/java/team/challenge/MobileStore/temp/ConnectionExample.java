@@ -8,7 +8,7 @@ import org.bson.Document;
 
 public class ConnectionExample {
     public static void main(String[] args) {
-        String connectionString = "mongodb+srv://<Timur>:<password>@teamchallengeshopdb.y1jcew2.mongodb.net/Marketplace?retryWrites=true&w=majority";
+        String connectionString = "mongodb+srv://Timur:bmxTRq9AaFrUUeZt@teamchallengeshopdb.y1jcew2.mongodb.net/Marketplace?retryWrites=true&w=majority";
         ServerApi serverApi = ServerApi.builder()
                 .version(ServerApiVersion.V1)
                 .build();

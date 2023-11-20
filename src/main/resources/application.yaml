@@ -6,3 +6,7 @@ spring:
       uri: ${value.from.external.file}
 
 
+jwt:
+  secret: "secretkeyforcoinkeeperaplication"
+
+
