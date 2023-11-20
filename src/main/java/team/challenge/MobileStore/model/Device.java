@@ -18,7 +18,7 @@ import java.util.List;
 public class Device {
     @Id
     private String id;
-    List<Characteristic> characteristics;
+    List<SpecificationGroup> specificationGroups;
     String uriMainPhoto;
     List<String> uriPhotos;
     Integer price;
