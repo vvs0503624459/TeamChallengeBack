@@ -4,4 +4,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import team.challenge.MobileStore.model.Device;
 
 public interface DeviceRepository extends MongoRepository<Device, String> {
+    //todo кастомні пошуки за брендом
 }
