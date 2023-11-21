@@ -18,6 +18,7 @@ import java.util.List;
 public class Device {
     @Id
     private String id;
+    Brand brand;
     List<SpecificationGroup> specificationGroups;
     String uriMainPhoto;
     List<String> uriPhotos;
