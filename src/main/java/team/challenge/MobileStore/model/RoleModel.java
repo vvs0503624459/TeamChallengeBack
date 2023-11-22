@@ -15,8 +15,9 @@ import org.springframework.security.core.GrantedAuthority;
 @Document
 public class RoleModel implements GrantedAuthority {
     @Id
-    String id;
-    String roleName;
+    private String id;
+    private String roleName;
+
     @Override
     public String getAuthority() {
         return "ROLE_" + roleName;
