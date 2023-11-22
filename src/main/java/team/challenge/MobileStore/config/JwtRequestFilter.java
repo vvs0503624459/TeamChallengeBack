@@ -16,6 +16,10 @@ import team.challenge.MobileStore.service.JwtTokenService;
 import team.challenge.MobileStore.service.UserService;
 
 import java.io.IOException;
+
+/**
+ * Class filter to get jwt token from user.
+ */
 @Component
 @RequiredArgsConstructor
 public class JwtRequestFilter extends OncePerRequestFilter {
