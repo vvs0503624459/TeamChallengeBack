@@ -54,6 +54,9 @@ public class Device {
      * specificationGroups - set of specifications of the phone.
      */
     private List<SpecificationGroup> specificationGroups;
+
+    private Integer quantity;
+
     /**
      * brand - Device's brand in the real world.
      */
