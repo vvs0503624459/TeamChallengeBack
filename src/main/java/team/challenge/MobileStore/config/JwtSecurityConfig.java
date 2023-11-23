@@ -14,6 +14,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
+/**
+ * JWT security config - authorize user
+ */
 @EnableWebSecurity
 @RequiredArgsConstructor
 @Configuration

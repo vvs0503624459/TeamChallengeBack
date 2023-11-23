@@ -19,16 +19,16 @@ import java.util.Set;
 @Builder
 public class UserModel implements UserDetails {
     @Id
-    String id;
-    String email;
-    String password;
-    String firstname;
-    String lastname;
-    String picture;
-    LocalDateTime lastVisit;
-    String gender;
-    List<Address> addresses;
-    Set<RoleModel> roleModels;
+    private String id;
+    private String email;
+    private String password;
+    private String firstname;
+    private String lastname;
+    private String picture;
+    private LocalDateTime lastVisit;
+    private String gender;
+    private List<Address> addresses;
+    private Set<RoleModel> roleModels;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
