@@ -13,5 +13,7 @@ public interface DeviceRepository extends MongoRepository<Device, String> {
     List<Device> getAllBySeriesAndInternalMemory(String series, String internalMemory);
     @Query("{$and: [{'specificationGroups.specifications': {$elemMath:  {'title': 'series', 'value': ?0}}}, {'specificationGroups.specifications': {$elemMath:  {'title': 'color', 'value': ?1}}}]}")
     List<Device> getAllBySeriesAndColor(String series, String color);
+    @Query("{'specificationGroups.specifications': {$elemMath:  {'title': 'series', 'value': ?0}}}")
+    List<Device> getAllBySeries(String series);
 
 }
