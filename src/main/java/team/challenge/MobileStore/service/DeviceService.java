@@ -9,13 +9,14 @@ import team.challenge.MobileStore.model.Device;
 import java.util.List;
 
 public interface DeviceService {
-    List<DeviceDtoShort> getAll();
+    List<DeviceDtoShort> getAllWithSize(@NonNull final Integer size);
+    List<DeviceDtoShort> getAllWithSizeFromCatalogAndBrand(@NonNull final Integer size, @NonNull final String brandId, @NonNull final String catalogId);
     List<DeviceDtoShort> getAllByBrandAndCatalogue(@NonNull final String brand, @NonNull final String catalogue);
     List<SameDeviceDto> getAllSameDevices(@NonNull final String deviceSeries);
     List<SameDeviceDto> getAllSameDevicesByInternalMemory(@NonNull final String deviceSeries, @NonNull final String internalMemory);
-    List<DeviceDtoFull> getOneById(@NonNull final String id);
+    DeviceDtoFull getOneById(@NonNull final String id);
     void delete(@NonNull final String id);
-    Device create(@NonNull final DeviceRequest deviceRequest);
-    Device update(@NonNull final String deviceId, @NonNull final DeviceRequest deviceRequest);
+    DeviceDtoFull create(@NonNull final DeviceRequest deviceRequest);
+    DeviceDtoFull update(@NonNull final String deviceId, @NonNull final DeviceRequest deviceRequest);
 
 }

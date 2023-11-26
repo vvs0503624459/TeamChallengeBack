@@ -3,6 +3,8 @@ package team.challenge.MobileStore.repositories;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
+import team.challenge.MobileStore.model.Brand;
+import team.challenge.MobileStore.model.Catalog;
 import team.challenge.MobileStore.model.Device;
 
 import java.util.List;
@@ -15,5 +17,7 @@ public interface DeviceRepository extends MongoRepository<Device, String> {
     List<Device> getAllBySeriesAndColor(String series, String color);
     @Query("{'specificationGroups.specifications': {$elemMath:  {'title': 'series', 'value': ?0}}}")
     List<Device> getAllBySeries(String series);
+
+    List<Device> findAllByCatalogAndBrand(Catalog catalog, Brand brand);
 
 }
