@@ -1,4 +1,4 @@
-package team.challenge.MobileStore.dto.mainPage;
+package team.challenge.MobileStore.dto;
 
 /**
  * DTO with information about device rating.
@@ -6,7 +6,7 @@ package team.challenge.MobileStore.dto.mainPage;
  * @param rating - mark.
  * @param countOfVotes - count of votes.
  */
-public record ReviewsShortDto(
+public record ReviewMarkDto(
         Double rating,
         Integer countOfVotes
 ) {
