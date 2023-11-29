@@ -47,14 +47,16 @@ public class Device {
      */
     private String Color;
     /**
-     * barCode - unique device's barCode, it often written at the end of the name of device. This barcode is craeted by the company of the device.
+     * barCode - unique device's barCode, it is often written at the end of the name of device. This barcode is craeted by the company of the device.
      */
     private String barCode;
     /**
      * specificationGroups - set of specifications of the phone.
      */
     private List<SpecificationGroup> specificationGroups;
-
+    /**
+     * quantity - number of phones in stock.
+     */
     private Integer quantity;
 
     /**
