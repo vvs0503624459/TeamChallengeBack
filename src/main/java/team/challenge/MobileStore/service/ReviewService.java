@@ -4,6 +4,7 @@ import lombok.NonNull;
 import team.challenge.MobileStore.dto.ReviewMarkDto;
 import team.challenge.MobileStore.dto.ReviewRequest;
 import team.challenge.MobileStore.dto.ReviewResponse;
+import team.challenge.MobileStore.model.Likes;
 
 import java.util.List;
 import java.util.Set;
@@ -17,7 +18,7 @@ public interface ReviewService {
      * @param deviceId device ID to find reviews.
      * @return list with reviews which contain present device ID with present size.
      */
-    List<?> getAllByDevice(@NonNull final Integer size, @NonNull final String deviceId);
+    List<ReviewResponse> getAllByDevice(final Integer size, @NonNull final String deviceId);
 
     /**
      * @param id unique review ID.
@@ -55,4 +56,17 @@ public interface ReviewService {
      * @return set of device tags.
      */
     Set<String> getDeviceTags(@NonNull final String deviceId);
+
+    /**
+     * @param userId user ID who adds mark.
+     * @param reviewId review ID to which a mark is adding.
+     * @param like like or dislike.
+     */
+    void giveLike(@NonNull final String userId, @NonNull final String reviewId, @NonNull final Likes like);
+
+    /**
+     * @param userId user ID who take back mark.
+     * @param reviewId review ID from which a mark is taken.
+     */
+    void takeLike(@NonNull final String userId, @NonNull final String reviewId);
 }
