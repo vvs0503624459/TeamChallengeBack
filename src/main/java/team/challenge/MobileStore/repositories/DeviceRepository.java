@@ -4,7 +4,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 import team.challenge.MobileStore.model.Brand;
-import team.challenge.MobileStore.model.Catalog;
 import team.challenge.MobileStore.model.Device;
 
 import java.util.List;

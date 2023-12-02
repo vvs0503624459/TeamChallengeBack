@@ -13,8 +13,21 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Catalogue {
+    /**
+     * Model for catalogue in header
+     */
+
+
+    /**
+     * id - unique id of Catalogue from header
+     */
     @Id
     String id;
+
+
+    /**
+     * title - the name of position in header catalogue
+     */
     @Indexed(unique = true)
     String title;
     @DocumentReference
