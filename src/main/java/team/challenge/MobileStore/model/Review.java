@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Document(collection = "review")
 @Data
@@ -18,8 +19,8 @@ public class Review {
     private String minuses;
     private Comment message;
     @DocumentReference
-    private List<Device> devices;
-    private List<String> tags;
-    private List<String> photosUri;
+    private Set<Device> devices;
+    private Set<String> tags;
+    private Set<String> photosUri;
     private Map<String, Likes> likesAndDislikes;   //userId and like or dislike
 }

@@ -8,13 +8,14 @@ import team.challenge.MobileStore.dto.ReviewRequest;
 import team.challenge.MobileStore.dto.ReviewResponse;
 import team.challenge.MobileStore.exception.ModelNotFoundException;
 import team.challenge.MobileStore.mapper.ReviewMapper;
-import team.challenge.MobileStore.model.Likes;
-import team.challenge.MobileStore.model.Review;
+import team.challenge.MobileStore.model.*;
+import team.challenge.MobileStore.repositories.DeviceRepository;
 import team.challenge.MobileStore.repositories.ReviewRepository;
 import team.challenge.MobileStore.repositories.UserRepository;
 import team.challenge.MobileStore.service.ReviewService;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * ReviewService implementation.
@@ -25,6 +26,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
     private final ReviewMapper reviewMapper;
     private final UserRepository userRepository;
+    private final DeviceRepository deviceRepository;
     @Override
     public List<ReviewResponse> getAllByDevice(Integer size, @NonNull String deviceId) {
         List<ReviewResponse> reviewResponses = reviewRepository.findAllByDeviceId(deviceId).stream().map(reviewMapper::mapToReviewResponse).toList();
@@ -43,14 +45,23 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public ReviewResponse create(@NonNull ReviewRequest reviewRequest) {
+        Device device = deviceRepository.findById(reviewRequest.deviceId()).get();
+        List<Specification> specifications = new ArrayList<>();
+        for (SpecificationGroup group: device.getSpecificationGroups()){
+            specifications.addAll(group.getSpecifications());
+        }
+        String series = specifications.stream().filter(specification -> specification.getTitle().equals("series")).map(Specification::getValue).toString();
+        String memory = specifications.stream().filter(specification -> specification.getTitle().equals("internal memory")).map(Specification::getValue).toString();;
+        List<Device> sameDevices = deviceRepository.getAllBySeriesAndInternalMemory(series, memory);
         Review review = new Review();
         review.setRating(reviewRequest.rating());
         review.setPluses(reviewRequest.pluses());
         review.setMinuses(reviewRequest.minuses());
         review.setMessage(reviewRequest.comment());
-        review.setTags(reviewRequest.tags());
-        review.setPhotosUri(reviewRequest.photosUri());
+        review.setTags(new HashSet<>(reviewRequest.tags()));
+        review.setPhotosUri(new HashSet<>(reviewRequest.photosUri()));
         review.setLikesAndDislikes(new HashMap<>());
+        review.setDevices(new HashSet<>(sameDevices));
         /*
             get device
             find same by series and memory
@@ -68,8 +79,8 @@ public class ReviewServiceImpl implements ReviewService {
         review.setPluses(reviewRequest.pluses());
         review.setMinuses(reviewRequest.minuses());
         review.setMessage(reviewRequest.comment());
-        review.setTags(reviewRequest.tags());
-        review.setPhotosUri(reviewRequest.photosUri());
+        review.setTags(new HashSet<>(reviewRequest.tags()));
+        review.setPhotosUri(new HashSet<>(reviewRequest.photosUri()));
         review.setLikesAndDislikes(new HashMap<>());
         return reviewMapper.mapToReviewResponse(review);
     }
