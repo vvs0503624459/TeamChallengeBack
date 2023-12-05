@@ -5,6 +5,7 @@ import team.challenge.MobileStore.dto.ReviewMarkDto;
 import team.challenge.MobileStore.dto.ReviewRequest;
 import team.challenge.MobileStore.dto.ReviewResponse;
 import team.challenge.MobileStore.model.Likes;
+import team.challenge.MobileStore.model.Review;
 
 import java.util.List;
 import java.util.Set;
@@ -18,38 +19,33 @@ public interface ReviewService {
      * @param deviceId device ID to find reviews.
      * @return list with reviews which contain present device ID with present size.
      */
-    List<ReviewResponse> getAllByDevice(final Integer size, @NonNull final String deviceId);
+    List<Review> getAllByDevice(@NonNull final String deviceId);
 
     /**
      * @param id unique review ID.
      * @return DTO with information about review you were looking for.
      */
-    ReviewResponse getOne(@NonNull final String id);
+    Review getOne(@NonNull final String id);
 
 
     /**
      * @param reviewRequest DTO with information about review.
      * @return DTO with information about created review.
      */
-    ReviewResponse create(@NonNull final ReviewRequest reviewRequest);
+    Review create(@NonNull final ReviewRequest reviewRequest);
 
     /**
      * @param id unique review ID to update.
      * @param reviewRequest DTO with new information for given review.
      * @return DTO with information about updated review.
      */
-    ReviewResponse update(@NonNull final String id, @NonNull final ReviewRequest reviewRequest);
+    Review update(@NonNull final String id, @NonNull final ReviewRequest reviewRequest);
 
     /**
      * @param id unique review ID to delete.
      */
     void delete(@NonNull final String id);
 
-    /**
-     * @param deviceId device ID to calculate the mark.
-     * @return DTO with mark and count of votes.
-     */
-    ReviewMarkDto getDeviceMark(@NonNull final String deviceId);
 
     /**
      * @param deviceId device ID to find tags.
@@ -62,11 +58,11 @@ public interface ReviewService {
      * @param reviewId review ID to which a mark is adding.
      * @param like like or dislike.
      */
-    void giveLike(@NonNull final String userId, @NonNull final String reviewId, @NonNull final Likes like);
+    Review giveLike(@NonNull final String userId, @NonNull final String reviewId, @NonNull final Likes like);
 
     /**
      * @param userId user ID who take back mark.
      * @param reviewId review ID from which a mark is taken.
      */
-    void takeLike(@NonNull final String userId, @NonNull final String reviewId);
+    Review takeLike(@NonNull final String userId, @NonNull final String reviewId);
 }

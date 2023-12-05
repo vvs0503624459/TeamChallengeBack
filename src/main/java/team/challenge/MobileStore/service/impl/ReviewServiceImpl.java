@@ -1,5 +1,6 @@
 package team.challenge.MobileStore.service.impl;
 
+import lombok.Builder;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -7,61 +8,33 @@ import team.challenge.MobileStore.dto.ReviewMarkDto;
 import team.challenge.MobileStore.dto.ReviewRequest;
 import team.challenge.MobileStore.dto.ReviewResponse;
 import team.challenge.MobileStore.exception.ModelNotFoundException;
-import team.challenge.MobileStore.mapper.ReviewMapper;
 import team.challenge.MobileStore.model.*;
-import team.challenge.MobileStore.repositories.DeviceRepository;
 import team.challenge.MobileStore.repositories.ReviewRepository;
-import team.challenge.MobileStore.repositories.UserRepository;
+import team.challenge.MobileStore.service.DeviceService;
 import team.challenge.MobileStore.service.ReviewService;
+import team.challenge.MobileStore.service.UserService;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
-/**
- * ReviewService implementation.
- */
 @Service
 @RequiredArgsConstructor
+
 public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
-    private final ReviewMapper reviewMapper;
-    private final UserRepository userRepository;
-    private final DeviceRepository deviceRepository;
+    private final DeviceService deviceService;
+    private final UserService userService;
     @Override
-    public List<ReviewResponse> getAllByDevice(Integer size, @NonNull String deviceId) {
-        List<ReviewResponse> reviewResponses = reviewRepository.findAllByDeviceId(deviceId).stream().map(reviewMapper::mapToReviewResponse).toList();
-        return size == null ? reviewResponses : reviewResponses.subList(0, size);
+    public List<Review> getAllByDevice(@NonNull String deviceId) {
+        return deviceService.getOne(deviceId).getReviews();
     }
 
     @Override
-    public ReviewResponse getOne(@NonNull String id) {
-        Review review = getReviewModel(id);
-        return reviewMapper.mapToReviewResponse(review);
-    }
-
-    private Review getReviewModel(String id) {
+    public Review getOne(@NonNull String id) {
         return reviewRepository.findById(id).orElseThrow(() -> new ModelNotFoundException(String.format("Review with id: %s not found", id)));
     }
 
     @Override
-    public ReviewResponse create(@NonNull ReviewRequest reviewRequest) {
-        Device device = deviceRepository.findById(reviewRequest.deviceId()).get();
-        List<Specification> specifications = new ArrayList<>();
-        for (SpecificationGroup group: device.getSpecificationGroups()){
-            specifications.addAll(group.getSpecifications());
-        }
-        String series = specifications.stream().filter(specification -> specification.getTitle().equals("series")).map(Specification::getValue).toString();
-        String memory = specifications.stream().filter(specification -> specification.getTitle().equals("internal memory")).map(Specification::getValue).toString();;
-        List<Device> sameDevices = deviceRepository.getAllBySeriesAndInternalMemory(series, memory);
-        Review review = new Review();
-        review.setRating(reviewRequest.rating());
-        review.setPluses(reviewRequest.pluses());
-        review.setMinuses(reviewRequest.minuses());
-        review.setMessage(reviewRequest.comment());
-        review.setTags(new HashSet<>(reviewRequest.tags()));
-        review.setPhotosUri(new HashSet<>(reviewRequest.photosUri()));
-        review.setLikesAndDislikes(new HashMap<>());
-        review.setDevices(new HashSet<>(sameDevices));
+    public Review create(@NonNull ReviewRequest reviewRequest) {
         /*
             get device
             find same by series and memory
@@ -69,12 +42,25 @@ public class ReviewServiceImpl implements ReviewService {
             build model
             map tp res
          */
-        return reviewMapper.mapToReviewResponse(review);
+        Device device = deviceService.getOne(reviewRequest.deviceId());
+        String memory = device.getSpecificationValue("internal memory");
+        List<Device> devices = deviceService.getAllWithSameMemory(reviewRequest.deviceId(), memory);
+        Review review = Review.builder()
+                .rating(reviewRequest.rating())
+                .pluses(reviewRequest.pluses())
+                .minuses(reviewRequest.minuses())
+                .message(reviewRequest.comment())
+                .tags(reviewRequest.tags())
+                .photosUri(reviewRequest.photosUri())
+                .build();
+        review = reviewRepository.save(review);
+        deviceService.addReviewToDevices(review, devices);
+        return review;
     }
 
     @Override
-    public ReviewResponse update(@NonNull String id, @NonNull ReviewRequest reviewRequest) {
-        Review review = getReviewModel(id);
+    public Review update(@NonNull String id, @NonNull ReviewRequest reviewRequest) {
+        Review review = getOne(id);
         review.setRating(reviewRequest.rating());
         review.setPluses(reviewRequest.pluses());
         review.setMinuses(reviewRequest.minuses());
@@ -82,46 +68,41 @@ public class ReviewServiceImpl implements ReviewService {
         review.setTags(new HashSet<>(reviewRequest.tags()));
         review.setPhotosUri(new HashSet<>(reviewRequest.photosUri()));
         review.setLikesAndDislikes(new HashMap<>());
-        return reviewMapper.mapToReviewResponse(review);
+        return reviewRepository.save(review);
     }
 
     @Override
     public void delete(@NonNull String id) {
-        getOne(id);
-        reviewRepository.deleteById(id);
+        Review review = getOne(id);
+        deviceService.deleteReviewFromDevices(review);
+        reviewRepository.delete(review);
     }
 
-    @Override
-    public ReviewMarkDto getDeviceMark(@NonNull String deviceId) {
-        List<ReviewResponse> responses = getAllByDevice(null, deviceId);
-        Integer ratingSum = responses.stream().map(ReviewResponse::rating).reduce(0, Integer::sum);
-        return new ReviewMarkDto(((double) ratingSum/responses.size()), responses.size());
-    }
 
     @Override
     public Set<String> getDeviceTags(@NonNull String deviceId) {
         Set<String> tags = new HashSet<>();
-        for (ReviewResponse res: getAllByDevice(null, deviceId)) {
-            tags.addAll(res.tags());
+        for (Review res: getAllByDevice( deviceId)) {
+            tags.addAll(res.getTags());
         }
         return tags;
     }
 
     @Override
-    public void giveLike(@NonNull String userId, @NonNull String reviewId, @NonNull Likes like) {
-        Review review = getReviewModel(reviewId);
-        userRepository.findById(userId).orElseThrow(() -> new ModelNotFoundException(String.format("User with id: %s not found", userId)));
+    public Review giveLike(@NonNull String userId, @NonNull String reviewId, @NonNull Likes like) {
+        Review review = getOne(reviewId);
+        userService.getOneById(userId);
         if (!review.getLikesAndDislikes().containsKey(userId)){
             review.getLikesAndDislikes().put(userId, like);
         }
-        reviewRepository.save(review);
+        return reviewRepository.save(review);
     }
 
     @Override
-    public void takeLike(@NonNull String userId, @NonNull String reviewId) {
-        Review review = getReviewModel(reviewId);
-        userRepository.findById(userId).orElseThrow(() -> new ModelNotFoundException(String.format("User with id: %s not found", userId)));
+    public Review takeLike(@NonNull String userId, @NonNull String reviewId) {
+        Review review = getOne(reviewId);
+        userService.getOneById(userId);
         review.getLikesAndDislikes().remove(userId);
-        reviewRepository.save(review);
+        return reviewRepository.save(review);
     }
 }

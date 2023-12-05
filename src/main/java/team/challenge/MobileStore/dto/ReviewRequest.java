@@ -4,6 +4,7 @@ import team.challenge.MobileStore.model.Comment;
 import team.challenge.MobileStore.model.Likes;
 
 import java.util.List;
+import java.util.Set;
 
 public record ReviewRequest(
         String deviceId,
@@ -11,9 +12,7 @@ public record ReviewRequest(
         String pluses,
         String minuses,
         Comment comment,
-        List<String> tags,
-        List<String> photosUri,
-        String reviewerId,
-        Likes like
+        Set<String> tags,
+        Set<String> photosUri
 ) {
 }

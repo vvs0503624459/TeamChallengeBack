@@ -1,5 +1,6 @@
 package team.challenge.MobileStore.model;
 
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -11,6 +12,7 @@ import java.util.Set;
 
 @Document(collection = "review")
 @Data
+@Builder
 public class Review {
     @Id
     private String id;
@@ -18,8 +20,8 @@ public class Review {
     private String pluses;
     private String minuses;
     private Comment message;
-    @DocumentReference
-    private Set<Device> devices;
+//    @DocumentReference
+//    private Set<Device> devices;
     private Set<String> tags;
     private Set<String> photosUri;
     private Map<String, Likes> likesAndDislikes;   //userId and like or dislike

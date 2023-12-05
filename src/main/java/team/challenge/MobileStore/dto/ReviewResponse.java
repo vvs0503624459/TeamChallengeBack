@@ -3,6 +3,7 @@ package team.challenge.MobileStore.dto;
 import team.challenge.MobileStore.model.Comment;
 
 import java.util.List;
+import java.util.Set;
 
 public record ReviewResponse(
         String id,
@@ -10,8 +11,8 @@ public record ReviewResponse(
         String pluses,
         String minuses,
         Comment comment,
-        List<String> tags,
-        List<String> photosUri,
+        Set<String> tags,
+        Set<String> photosUri,
         Integer countOfLikes,
         Integer countOfDislikes
 
