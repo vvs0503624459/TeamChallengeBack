@@ -4,7 +4,7 @@ import lombok.NonNull;
 import team.challenge.MobileStore.dto.DeviceDtoFull;
 import team.challenge.MobileStore.dto.DeviceDtoShort;
 import team.challenge.MobileStore.dto.DeviceRequest;
-import team.challenge.MobileStore.dto.DeviceWithSameColorDto;
+import team.challenge.MobileStore.dto.SameDeviceDto;
 
 import java.util.List;
 
@@ -38,14 +38,14 @@ public interface DeviceServiceFirst {
      * @param color
      * @return
      */
-    List<DeviceWithSameColorDto> getAllSameDevicesWithSameColor(@NonNull final String deviceId, @NonNull final String color);
+    List<SameDeviceDto> getAllSameDevicesWithSameColor(@NonNull final String deviceId, @NonNull final String color);
 
     /**
      * @param deviceId
      * @param internalMemory
      * @return
      */
-    List<DeviceWithSameColorDto> getAllSameDevicesWithSameInternalMemory(@NonNull final String deviceId, @NonNull final String internalMemory);
+    List<SameDeviceDto> getAllSameDevicesWithSameInternalMemory(@NonNull final String deviceId, @NonNull final String internalMemory);
 
     /**
      * @param id unique Device ID.

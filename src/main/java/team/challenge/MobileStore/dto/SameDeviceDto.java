@@ -4,10 +4,10 @@ package team.challenge.MobileStore.dto;
  * DTO with information about same devices.
  *
  * @param id - device ID.
- * @param color - device color.
+ * @param value - device same field value.
  */
-public record DeviceWithSameColorDto(
+public record SameDeviceDto(
         String id,
-        String color
+        String value
 ) {
 }

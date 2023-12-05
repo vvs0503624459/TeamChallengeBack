@@ -111,13 +111,13 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public List<Device> getAllWithSameColor(@NonNull String deviceId, @NonNull String color) {
-        String deviceSeries = getDeviceSpecification(getOne(deviceId)).stream().filter(specification -> specification.getTitle().equals("series")).map(Specification::getValue).collect(Collectors.joining());
+        String deviceSeries = getOne(deviceId).getSpecificationValue("series");
         return deviceRepository.getAllBySeriesAndColor(deviceSeries, color);
     }
 
     @Override
     public List<Device> getAllWithSameMemory(@NonNull String deviceId, @NonNull String internalMemory) {
-        String deviceSeries = getDeviceSpecification(getOne(deviceId)).stream().filter(specification -> specification.getTitle().equals("series")).map(Specification::getValue).collect(Collectors.joining());
+        String deviceSeries = getOne(deviceId).getSpecificationValue("series");
         return deviceRepository.getAllBySeriesAndInternalMemory(deviceSeries, internalMemory);
     }
 
@@ -160,13 +160,5 @@ public class DeviceServiceImpl implements DeviceService {
         deviceRepository.saveAll(devices);
     }
 
-    private List<Specification> getDeviceSpecification(@NonNull Device device){
-        List<Specification> res = new ArrayList<>();
-        for (SpecificationGroup group :
-                device.getSpecificationGroups()) {
-            res.addAll(group.getSpecifications());
-        }
-        return res;
-    }
 
 }

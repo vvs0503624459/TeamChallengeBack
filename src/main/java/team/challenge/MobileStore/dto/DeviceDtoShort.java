@@ -22,6 +22,6 @@ public record DeviceDtoShort(
         ReviewMarkDto review,
         Integer price,
         Integer discount,
-        List<DeviceWithSameColorDto> devicesWithSameColor
+        List<SameDeviceDto> devicesWithSameColor
 ) {
 }
