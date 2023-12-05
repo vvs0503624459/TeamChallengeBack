@@ -141,6 +141,25 @@ public class DeviceServiceImpl implements DeviceService {
         deviceRepository.delete(getOne(deviceId));
     }
 
+    @Override
+    public void addReviewToDevices(@NonNull Review review, List<Device> devices) {
+        for (Device device :
+                devices) {
+            device.getReviews().add(review);
+        }
+        deviceRepository.saveAll(devices);
+    }
+
+    @Override
+    public void deleteReviewFromDevices(Review review) {
+        List<Device> devices = deviceRepository.findAllByReviews(Collections.singletonList(review));
+        for (Device device :
+                devices) {
+            device.getReviews().remove(review);
+        }
+        deviceRepository.saveAll(devices);
+    }
+
     private List<Specification> getDeviceSpecification(@NonNull Device device){
         List<Specification> res = new ArrayList<>();
         for (SpecificationGroup group :

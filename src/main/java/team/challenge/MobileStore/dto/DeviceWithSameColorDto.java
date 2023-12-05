@@ -1,4 +1,4 @@
-package team.challenge.MobileStore.dto.mainPage;
+package team.challenge.MobileStore.dto;
 
 /**
  * DTO with information about same devices.
@@ -6,7 +6,7 @@ package team.challenge.MobileStore.dto.mainPage;
  * @param id - device ID.
  * @param color - device color.
  */
-public record OtherColors(
+public record DeviceWithSameColorDto(
         String id,
         String color
 ) {

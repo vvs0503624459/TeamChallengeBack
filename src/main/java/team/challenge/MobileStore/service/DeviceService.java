@@ -5,6 +5,7 @@ import team.challenge.MobileStore.dto.DeviceRequest;
 import team.challenge.MobileStore.model.Brand;
 import team.challenge.MobileStore.model.Catalogue;
 import team.challenge.MobileStore.model.Device;
+import team.challenge.MobileStore.model.Review;
 
 import java.util.List;
 import java.util.Map;
@@ -18,4 +19,6 @@ public interface DeviceService {
     Device create(@NonNull final DeviceRequest deviceRequest);
     Device update(@NonNull final String deviceId, @NonNull final DeviceRequest deviceRequest);
     void delete(@NonNull final String deviceId);
+    void addReviewToDevices(@NonNull final Review review, List<Device> devices);
+    void deleteReviewFromDevices(Review review);
 }

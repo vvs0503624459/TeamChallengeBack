@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import team.challenge.MobileStore.model.Brand;
 import team.challenge.MobileStore.model.Catalogue;
 import team.challenge.MobileStore.model.Device;
+import team.challenge.MobileStore.model.Review;
 
 import java.util.List;
 
@@ -19,5 +20,6 @@ public interface DeviceRepository extends MongoRepository<Device, String> {
     List<Device> getAllBySeries(String series);
 
     List<Device> findAllByCatalogueAndBrand(Catalogue catalog, Brand brand);
+    List<Device> findAllByReviews(List<Review> review);
 
 }

@@ -7,7 +7,9 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
+import team.challenge.MobileStore.dto.DevicePresentation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -43,13 +45,13 @@ public class Device {
      */
     private Integer discount;
     /**
-     * Color - the device's color.
-     */
-    private String Color;
-    /**
      * barCode - unique device's barCode, it is often written at the end of the name of device. This barcode is craeted by the company of the device.
      */
-    private String barCode;
+    private String skuCode;
+    /**
+     *
+     */
+    private List<DevicePresentation> presentations;
     /**
      * specificationGroups - set of specifications of the phone.
      */
@@ -68,10 +70,24 @@ public class Device {
      * catalog - Device's place in the main catalog where it stores.
      */
     @DocumentReference
-    private Catalog catalog;
+    private Catalogue catalogue;
     /**
      * reviews - it is attached to the device.
      */
     @DocumentReference
     private List<Review> reviews;
+
+    /**
+     * questions -
+     */
+    @DocumentReference
+    private List<Question> questions;
+
+    public String getSpecificationValue(String specificationTitle){
+        List<Specification> specifications = new ArrayList<>();
+        for (SpecificationGroup group: this.specificationGroups){
+            specifications.addAll(group.getSpecifications());
+        }
+        return specifications.stream().filter(specification -> specification.getTitle().equals(specificationTitle)).map(Specification::getValue).toString();
+    }
 }
