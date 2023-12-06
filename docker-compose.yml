@@ -1,0 +1,18 @@
+version: "3.8"
+services:
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - 27017:27017
+    volumes:
+      - data:/data
+    environment:
+      - MONGO_INITDB_ROOT_USER_USERNAME=rootuser
+      - MONGO_INITDB_ROOT_USER_PASSWORD=rootpass
+  app:
+    #він шукає наш докер файл. При запуску docker-compose ми шукатимемо локально наш контейнер, а не шукатимемо вже існуючий образ
+    build: ./
+    container_name: 'java-app'
+    ports:
+      - 8080:8080

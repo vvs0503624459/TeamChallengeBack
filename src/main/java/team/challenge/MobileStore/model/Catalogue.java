@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import java.util.List;
+
 @Document(collation = "catalogues")
 @Getter
 @Setter
@@ -22,14 +23,22 @@ public class Catalogue {
      * id - unique id of Catalogue from header
      */
     @Id
-    String id;
+    private String id;
 
 
     /**
-     * title - the name of position in header catalogue
+     * title - name of position in header catalogue
      */
     @Indexed(unique = true)
-    String title;
-    @DocumentReference
-    List<Brand> brands;
+    private String title;
+
+    /**
+     * nameOfGroup - name of Group in catalogue in header
+     */
+    private String nameOfGroup;
+
+    /**
+     * elementInGroup - each name of element in our group in catalogue
+     */
+    private List<String> elementInGroup;
 }
