@@ -3,7 +3,13 @@ spring:
     import: file:src/main/resources/database-configure.yaml
   data:
     mongodb:
-      uri: ${value.from.external.file}
+      host: localhost
+      port: 27017
+      username: rootuser
+      password: 'rootpassword'
+      database: storedb
+      auto-index-creation: true
+      authentication-database: admin
 jwt:
   secret: "secretkeyforcoinkeeperaplication"
 
