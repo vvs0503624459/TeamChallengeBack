@@ -1,0 +1,7 @@
+spring:
+  data:
+    mongodb:
+      uri: 'mongodb+srv://Timur:bmxTRq9AaFrUUeZt@teamchallengeshopdb.y1jcew2.mongodb.net/Marketplace?retryWrites=true&w=majority'
+
+jwt:
+  secret: "secretkeyforcoinkeeperaplication"
