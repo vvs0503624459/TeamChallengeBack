@@ -1,13 +1,12 @@
 package team.challenge.MobileStore.service;
 
 import lombok.NonNull;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import team.challenge.MobileStore.dto.UserRequest;
 import team.challenge.MobileStore.model.UserModel;
 
 import java.util.List;
 
-public interface UserService extends UserDetailsService {
+public interface UserService  {
     List<?> getAll();
     UserModel getOneById(@NonNull final String id);
     UserModel getOneByEmail(@NonNull final String email);

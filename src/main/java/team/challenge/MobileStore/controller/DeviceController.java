@@ -1,19 +1,16 @@
 package team.challenge.MobileStore.controller;
 
 
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
-import team.challenge.MobileStore.dto.mainPage.DeviceDtoShort;
-import team.challenge.MobileStore.model.Device;
+import team.challenge.MobileStore.dto.DeviceDtoFull;
+import team.challenge.MobileStore.dto.DeviceDtoShort;
+import team.challenge.MobileStore.mapper.DeviceMapper;
 import team.challenge.MobileStore.service.DeviceService;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * Main controller to get all devices, create, update, delete
@@ -24,6 +21,7 @@ import java.util.Optional;
 public class DeviceController {
 
     private final DeviceService deviceService;
+    private final DeviceMapper deviceMapper;
 
 
     /**
@@ -31,30 +29,16 @@ public class DeviceController {
      * @return - json file with device by his id.
      */
     @GetMapping("/{id}")
-    public DeviceDtoFull getDeviceById(@PathVariable String id) {
-        return ResponseEntity.ok(this.deviceService.getOneById(id));
+    public ResponseEntity<DeviceDtoFull> getDeviceById(@PathVariable String id) {
+        return ResponseEntity.ok(deviceMapper.mapToFullDto(deviceService.getOne(id)));
     }
 
-    /**
-     * @param size - size of phone
-     * @param brandId - brand id of phone
-     * @param catalogId - catalog id of phone
-     * @return - json file with list devices
-     */
+
     @GetMapping()
-    public ResponseEntity<List<DeviceDtoShort>> getAllWithSizeFromCatalogAndBrand(
-            @RequestParam(name = "size", required = false) Optional<Integer> size,
-            @RequestParam(name = "brandId", required = false) Optional<String> brandId,
-            @RequestParam(name = "catalogId", required = false) Optional<String> catalogId) {
-        if (size.isPresent() && brandId.isPresent() && catalogId.isPresent()) {
-            return ResponseEntity.ok(this.deviceService.getAllWithSizeFromCatalogAndBrand(size.get(), brandId.get(), catalogId.get()));
-        } else if (brandId.isPresent() && catalogId.isPresent()) {
-            return ResponseEntity.ok(this.deviceService.getAllByBrandAndCatalogue(brandId.get(), catalogId.get()));
-        } else if (size.isPresent()) {
-            return ResponseEntity.ok(this.deviceService.getAllWithSize(size.get()));
-        } else {
-            return ResponseEntity.ok(this.deviceService.getAll());
-        }
+    public List<DeviceDtoShort> getAllWithSizeFromCatalogAndBrand(@RequestParam Map<String, String> param)
+            {
+                return deviceMapper.mapToDeviceShortDtoList(deviceService.getAll(param));
+
     }
 
     /**
@@ -63,25 +47,26 @@ public class DeviceController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteDeviceById(@PathVariable String id) {
-        return ResponseEntity.ok(this.deviceService.delete(id));
+        deviceService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
-    /**
-     * @param deviceRequest - information about phone that was put by user
-     * @return json file with all information about created phone
-     */
-    @PostMapping
-    public ResponseEntity<DeviceDtoFull> createDevice(@RequestBody DeviceRequest deviceRequest) {
-        return ResponseEntity.ok(this.deviceService.create(deviceRequest));
-    }
-
-    /**
-     * @param id - unique id of phone
-     * @param deviceRequest - updated device
-     * @return json file with all information about updated phone
-     */
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateDeviceById(@PathVariable String id, @RequestBody DeviceRequest deviceRequest) {
-        return ResponseEntity.ok(this.deviceService.update(id, deviceRequest));
-    }
+//    /**
+//     * @param deviceRequest - information about phone that was put by user
+//     * @return json file with all information about created phone
+//     */
+//    @PostMapping
+//    public ResponseEntity<DeviceDtoFull> createDevice(@RequestBody DeviceRequest deviceRequest) {
+//        return ResponseEntity.ok(this.deviceService.create(deviceRequest));
+//    }
+//
+//    /**
+//     * @param id - unique id of phone
+//     * @param deviceRequest - updated device
+//     * @return json file with all information about updated phone
+//     */
+//    @PutMapping("/{id}")
+//    public ResponseEntity<?> updateDeviceById(@PathVariable String id, @RequestBody DeviceRequest deviceRequest) {
+//        return ResponseEntity.ok(this.deviceService.update(id, deviceRequest));
+//    }
 }

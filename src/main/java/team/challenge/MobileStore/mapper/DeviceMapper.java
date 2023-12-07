@@ -11,7 +11,9 @@ import java.util.List;
 public interface DeviceMapper {
     DeviceDtoFull mapToFullDto(@NonNull Device device);
     DeviceDtoShort mapToShortDto(@NonNull Device device);
+    List<DeviceDtoShort> mapToDeviceShortDtoList(List<Device> devices);
 
     List<SameDeviceDto> mapToSameDeviceDtoList(List<Device> devices);
     SameDeviceDto mapToSameDeviceDto(Device device);
+
 }

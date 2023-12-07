@@ -60,17 +60,17 @@ public class DeviceMapperImpl implements DeviceMapper {
         String color = findInSpecification(device, COLOR);
         List<Device> deviceServiceAllWithSameColor= deviceService.getAllWithSameColor(device.getId(), color);
         List<Review> reviews = reviewService.getAllByDevice(device.getId());
-        return new DeviceDtoShort(device.getId(), title, color, device.getUriMainPhoto(), reviewMapper.mapToReviewMarkDto(reviews), device.getPrice(), device.getDiscount(), mapToDeviceWithSameColorDtoList(deviceServiceAllWithSameColor));
+        return new DeviceDtoShort(device.getId(), title, color, device.getUriMainPhoto(), reviewMapper.mapToReviewMarkDto(reviews), device.getPrice(), device.getDiscount(), mapToSameDeviceDtoList(deviceServiceAllWithSameColor));
+    }
+
+    @Override
+    public List<DeviceDtoShort> mapToDeviceShortDtoList(List<Device> devices) {
+        return devices.stream().map(this::mapToShortDto).toList();
     }
 
     @Override
     public List<SameDeviceDto> mapToSameDeviceDtoList(List<Device> devices) {
-        List<SameDeviceDto> sameDevices = new ArrayList<>();
-        for (Device device :
-                devices) {
-            sameDevices.add(mapToSameDeviceDto(device));
-        }
-        return sameDevices;
+        return devices.stream().map(this::mapToSameDeviceDto).toList();
     }
 
     @Override

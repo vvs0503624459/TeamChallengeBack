@@ -2,12 +2,9 @@ package team.challenge.MobileStore.service.impl;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import team.challenge.MobileStore.dto.UserRequest;
-import team.challenge.MobileStore.exception.ModelIsAlreadyExist;
+import team.challenge.MobileStore.exception.ModelAlreadyExistException;
 import team.challenge.MobileStore.exception.ModelNotFoundException;
 import team.challenge.MobileStore.model.RoleModel;
 import team.challenge.MobileStore.model.UserModel;
@@ -22,7 +19,7 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-    private final PasswordEncoder passwordEncoder;
+//    private final PasswordEncoder passwordEncoder;
     @Override
     public List<?> getAll() {
         return userRepository.findAll();
@@ -42,7 +39,7 @@ public class UserServiceImpl implements UserService {
     public UserModel create(@NonNull UserRequest userRequest) {
         try{
             getOneByEmail(userRequest.email());
-            throw new ModelIsAlreadyExist(String.format("User with email: %s is already exist!", userRequest.email()));
+            throw new ModelAlreadyExistException(String.format("User with email: %s is already exist!", userRequest.email()));
         } catch (ModelNotFoundException e){
             RoleModel userRole = roleRepository.findByRoleName("USER").orElseGet(() -> {
                 RoleModel newRole = new RoleModel();
@@ -53,7 +50,7 @@ public class UserServiceImpl implements UserService {
                     .email(userRequest.email())
                     .firstname(userRequest.firstname())
                     .lastname(userRequest.lastname())
-                    .password(passwordEncoder.encode(userRequest.password()))
+//                    .password(passwordEncoder.encode(userRequest.password()))
                     .gender(userRequest.gender())
                     .picture(userRequest.picture())
                     .roleModels(Collections.singleton(userRole))
@@ -78,8 +75,8 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return getOneByEmail(username);
-    }
+//    @Override
+//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//        return getOneByEmail(username);
+//    }
 }
