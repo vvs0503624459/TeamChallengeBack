@@ -1,6 +1,6 @@
 spring:
   config:
-    import: file:src/main/resources/database-configure.yml
+    import: file:src/main/resources/database-configure.yaml
   data:
     mongodb:
       uri: ${value.from.external.file}

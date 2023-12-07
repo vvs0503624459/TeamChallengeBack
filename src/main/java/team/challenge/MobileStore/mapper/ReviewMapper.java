@@ -14,5 +14,6 @@ public interface ReviewMapper {
      * @return DTO with mark and count of votes.
      */
     ReviewMarkDto mapToReviewMarkDto(@NonNull final List<Review> reviews);
+    List<ReviewResponse> mapToReviewResponseList(List<Review> reviews);
 //    Review mapToReview(@NonNull final Review review);
 }

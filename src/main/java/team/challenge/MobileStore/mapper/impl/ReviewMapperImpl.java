@@ -35,4 +35,9 @@ public class ReviewMapperImpl implements ReviewMapper {
         Integer ratingSum = reviews.stream().map(Review::getRating).reduce(0, Integer::sum);
         return new ReviewMarkDto((double) ratingSum/ reviews.size(), reviews.size());
     }
+
+    @Override
+    public List<ReviewResponse> mapToReviewResponseList(List<Review> reviews) {
+        return reviews.stream().map(this::mapToReviewResponse).toList();
+    }
 }
