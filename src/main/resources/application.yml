@@ -1,0 +1,9 @@
+spring:
+  config:
+    import: file:src/main/resources/database-configure.yml
+  data:
+    mongodb:
+      uri: ${value.from.external.file}
+
+jwt:
+  secret: "secretkeyforcoinkeeperaplication"

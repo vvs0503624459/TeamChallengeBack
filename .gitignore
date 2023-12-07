@@ -6,6 +6,7 @@ target/
 src/main/resources/credentials/*
 src/main/resources/database-configure.yaml
 src/main/resources/cloudinary-configure.yaml
+credentials.env
 
 ### STS ###
 .apt_generated

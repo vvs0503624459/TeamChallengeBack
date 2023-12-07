@@ -61,14 +61,6 @@
                     </image>
                     <excludes>
                         <exclude>
-                            <annotationProcessorPaths>
-                                <path>
-                                    <groupId>org.projectlombok</groupId>
-                                    <artifactId>lombok-mapstruct-binding</artifactId>
-                                    <version>${lombok-mapstruct-binding.version}</version>
-                                </path>
-                                <!-- other annotation processors -->
-                            </annotationProcessorPaths>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
                         </exclude>
