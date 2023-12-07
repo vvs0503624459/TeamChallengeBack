@@ -1,11 +1,19 @@
 package team.challenge.MobileStore.controller;
 
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import team.challenge.MobileStore.dto.DeviceDtoFull;
 import team.challenge.MobileStore.dto.DeviceDtoShort;
+import team.challenge.MobileStore.exception.ApiError;
+import team.challenge.MobileStore.exception.ModelNotFoundException;
 import team.challenge.MobileStore.mapper.DeviceMapper;
 import team.challenge.MobileStore.service.DeviceService;
 
@@ -15,6 +23,7 @@ import java.util.Map;
 /**
  * Main controller to get all devices, create, update, delete
  */
+@Tag(name = "Device endpoints", description = "HTTP device methods")
 @RestController
 @RequestMapping("/api/v1/devises")
 @RequiredArgsConstructor
@@ -28,7 +37,24 @@ public class DeviceController {
      * @param id - unique id of device
      * @return - json file with device by his id.
      */
+
     @GetMapping("/{id}")
+    @Operation(summary = "Get one Device by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+            description = "Found one device by ID",
+            content = {
+                    @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = DeviceDtoFull.class))
+            }),
+            @ApiResponse(
+                    responseCode = "404",
+            description = "Device with present ID not found!",
+            content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ApiError.class))
+            })
+    })
     public ResponseEntity<DeviceDtoFull> getDeviceById(@PathVariable String id) {
         return ResponseEntity.ok(deviceMapper.mapToFullDto(deviceService.getOne(id)));
     }
@@ -46,6 +72,19 @@ public class DeviceController {
      * @return status of action
      */
     @DeleteMapping("/{id}")
+    @Operation(summary = "Delete one Device by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204",
+                    description = "Delete one device by ID"
+                    ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Device with present ID not found!",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ApiError.class))
+                    })
+    })
     public ResponseEntity<?> deleteDeviceById(@PathVariable String id) {
         deviceService.delete(id);
         return ResponseEntity.noContent().build();
