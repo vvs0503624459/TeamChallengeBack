@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import team.challenge.MobileStore.dto.DeviceDtoFull;
 import team.challenge.MobileStore.dto.DeviceDtoShort;
 import team.challenge.MobileStore.exception.ApiError;
-import team.challenge.MobileStore.exception.ModelNotFoundException;
 import team.challenge.MobileStore.mapper.DeviceMapper;
 import team.challenge.MobileStore.service.DeviceService;
 

@@ -8,14 +8,11 @@ import org.springframework.stereotype.Service;
 import team.challenge.MobileStore.dto.DeviceRequest;
 import team.challenge.MobileStore.exception.ModelNotFoundException;
 import team.challenge.MobileStore.model.*;
-import team.challenge.MobileStore.repositories.CatalogRepository;
 import team.challenge.MobileStore.repositories.DeviceCriteriaRepository;
 import team.challenge.MobileStore.repositories.DeviceRepository;
-import team.challenge.MobileStore.service.CatalogService;
 import team.challenge.MobileStore.service.DeviceService;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -62,7 +59,7 @@ public class DeviceServiceImpl implements DeviceService {
                 }
                 default -> {
                     List<String> paramList = List.of(entry.getValue().split(","));
-                    if (paramList.size() == 1){
+                    if (paramList.size() == 1) {
                         criteriaList.add(Criteria.where(SPECIFICATION).elemMatch(createCriteriaIs("value", entry.getValue())));
                     } else {
                         criteriaList.add(Criteria.where(SPECIFICATION).elemMatch(createCriteriaIn("value", paramList)));

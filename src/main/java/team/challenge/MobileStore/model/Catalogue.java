@@ -33,12 +33,9 @@ public class Catalogue {
     private String title;
 
     /**
-     * nameOfGroup - name of Group in catalogue in header
+     * groupSpecifications - groups of specifications for device in catalogue
      */
-    private String nameOfGroup;
 
-    /**
-     * elementInGroup - each name of element in our group in catalogue
-     */
-    private List<String> elementInGroup;
+    private List<CatalogueGroupSpecification> groupSpecifications;
+
 }
