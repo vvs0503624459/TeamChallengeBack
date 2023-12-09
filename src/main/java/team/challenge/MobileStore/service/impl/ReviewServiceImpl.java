@@ -1,20 +1,24 @@
 package team.challenge.MobileStore.service.impl;
 
-import lombok.Builder;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import team.challenge.MobileStore.dto.ReviewMarkDto;
+import team.challenge.MobileStore.dto.CommentRequest;
 import team.challenge.MobileStore.dto.ReviewRequest;
-import team.challenge.MobileStore.dto.ReviewResponse;
 import team.challenge.MobileStore.exception.ModelNotFoundException;
-import team.challenge.MobileStore.model.*;
+import team.challenge.MobileStore.model.Device;
+import team.challenge.MobileStore.model.Likes;
+import team.challenge.MobileStore.model.Review;
 import team.challenge.MobileStore.repositories.ReviewRepository;
+import team.challenge.MobileStore.service.CommentService;
 import team.challenge.MobileStore.service.DeviceService;
 import team.challenge.MobileStore.service.ReviewService;
 import team.challenge.MobileStore.service.UserService;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +27,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
     private final DeviceService deviceService;
     private final UserService userService;
+    private final CommentService commentService;
     @Override
     public List<Review> getAllByDevice(@NonNull String deviceId) {
         return deviceService.getOne(deviceId).getReviews();
@@ -49,7 +54,7 @@ public class ReviewServiceImpl implements ReviewService {
                 .rating(reviewRequest.rating())
                 .pluses(reviewRequest.pluses())
                 .minuses(reviewRequest.minuses())
-                .message(reviewRequest.comment())
+                .message(commentService.createNewComment(reviewRequest.comment()))
                 .tags(reviewRequest.tags())
                 .photosUri(reviewRequest.photosUri())
                 .build();
@@ -64,7 +69,7 @@ public class ReviewServiceImpl implements ReviewService {
         review.setRating(reviewRequest.rating());
         review.setPluses(reviewRequest.pluses());
         review.setMinuses(reviewRequest.minuses());
-        review.setMessage(reviewRequest.comment());
+        review.setMessage(commentService.createNewComment(reviewRequest.comment()));
         review.setTags(new HashSet<>(reviewRequest.tags()));
         review.setPhotosUri(new HashSet<>(reviewRequest.photosUri()));
         review.setLikesAndDislikes(new HashMap<>());
@@ -104,5 +109,11 @@ public class ReviewServiceImpl implements ReviewService {
         userService.getOneById(userId);
         review.getLikesAndDislikes().remove(userId);
         return reviewRepository.save(review);
+    }
+
+    @Override
+    public Review reply(@NonNull String reviewId, @NonNull String commentId, @NonNull CommentRequest comment) {
+        commentService.addAnswer(commentId, comment);
+        return getOne(reviewId);
     }
 }

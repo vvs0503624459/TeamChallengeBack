@@ -1,9 +1,5 @@
 package team.challenge.MobileStore.dto;
 
-import team.challenge.MobileStore.model.Comment;
-import team.challenge.MobileStore.model.Likes;
-
-import java.util.List;
 import java.util.Set;
 
 public record ReviewRequest(
@@ -11,7 +7,7 @@ public record ReviewRequest(
         Integer rating,
         String pluses,
         String minuses,
-        Comment comment,
+        CommentRequest comment,
         Set<String> tags,
         Set<String> photosUri
 ) {

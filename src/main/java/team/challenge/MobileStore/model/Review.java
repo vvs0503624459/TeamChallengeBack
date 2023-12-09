@@ -19,6 +19,7 @@ public class Review {
     private Integer rating;
     private String pluses;
     private String minuses;
+    @DocumentReference
     private Comment message;
 //    @DocumentReference
 //    private Set<Device> devices;
