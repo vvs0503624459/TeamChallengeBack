@@ -1,9 +1,8 @@
 package team.challenge.MobileStore.service;
 
 import lombok.NonNull;
-import team.challenge.MobileStore.dto.ReviewMarkDto;
+import team.challenge.MobileStore.dto.CommentRequest;
 import team.challenge.MobileStore.dto.ReviewRequest;
-import team.challenge.MobileStore.dto.ReviewResponse;
 import team.challenge.MobileStore.model.Likes;
 import team.challenge.MobileStore.model.Review;
 
@@ -65,4 +64,5 @@ public interface ReviewService {
      * @param reviewId review ID from which a mark is taken.
      */
     Review takeLike(@NonNull final String userId, @NonNull final String reviewId);
+    Review reply(@NonNull String reviewId, @NonNull String commentId, @NonNull CommentRequest comment);
 }
