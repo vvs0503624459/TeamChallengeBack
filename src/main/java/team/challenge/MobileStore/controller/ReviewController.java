@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import team.challenge.MobileStore.dto.CommentRequest;
 import team.challenge.MobileStore.dto.ReviewRequest;
 import team.challenge.MobileStore.dto.ReviewResponse;
 import team.challenge.MobileStore.exception.ApiError;
@@ -182,5 +183,12 @@ public class ReviewController {
     @GetMapping("{device_id}/tags")
     public Set<String> getReviewTags(@PathVariable(name = "device_id") String id){
         return reviewService.getDeviceTags(id);
+    }
+
+    @PatchMapping("/{review_id}/reply/{comment_id}")
+    public ResponseEntity<ReviewResponse> addAnswer(@PathVariable(name = "review_id") String reviewId,
+                                                    @PathVariable(name = "comment_id") String commentId,
+                                                    @RequestBody CommentRequest commentRequest){
+        return ResponseEntity.ok(reviewMapper.mapToReviewResponse(reviewService.reply(reviewId, commentId, commentRequest)));
     }
 }
