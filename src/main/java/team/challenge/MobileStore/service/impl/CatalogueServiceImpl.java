@@ -3,7 +3,6 @@ package team.challenge.MobileStore.service.impl;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import team.challenge.MobileStore.exception.ModelAlreadyExistException;
 import team.challenge.MobileStore.exception.ModelNotFoundException;
 import team.challenge.MobileStore.model.Catalogue;
 import team.challenge.MobileStore.repositories.CatalogueRepository;
@@ -21,7 +20,12 @@ public class CatalogueServiceImpl implements CatalogueService {
 
     @Override
     public List<Catalogue> getAll() {
-        return (catalogueRepository.findAll());
+        return catalogueRepository.findAll();
+    }
+
+    @Override
+    public Catalogue findById(String catalogueId) {
+        return getCatalogueById(catalogueId);
     }
 
 
@@ -33,24 +37,27 @@ public class CatalogueServiceImpl implements CatalogueService {
 
     @Override
     public Catalogue create(@NonNull Catalogue catalogue) {
-        Catalogue catalogueByTitle = getCatalogueByTitle(catalogue.getTitle());
+        /*Catalogue catalogueByTitle = getCatalogueByTitle(catalogue.getTitle());
         if (catalogueByTitle != null) {
             throw new ModelAlreadyExistException(String.format("Catalogue with this title: %s already exists", catalogue.getId()));
         } else {
             return catalogueRepository.save(catalogue);
-        }
+        }*/
+        return null;
     }
 
     @Override
     public Catalogue update(@NonNull String id, @NonNull Catalogue catalogue) {
-        Catalogue catalogueById = getCatalogueById(id);
+        /*Catalogue catalogueById = getCatalogueById(id);
         catalogueById.setTitle(catalogue.getTitle());
         catalogueById.setGroupSpecifications(catalogueById.getGroupSpecifications());
-        return catalogue;
+        return catalogue;*/
+        return null;
     }
 
     private Catalogue getCatalogueByTitle(String catalogueTitle) {
-        return catalogueRepository.findByTitle(catalogueTitle);
+        //return catalogueRepository.findByTitle(catalogueTitle);
+        return null;
     }
 
     private Catalogue getCatalogueById(String catalogueId) {

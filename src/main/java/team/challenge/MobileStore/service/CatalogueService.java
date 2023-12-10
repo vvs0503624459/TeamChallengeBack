@@ -1,15 +1,13 @@
 package team.challenge.MobileStore.service;
 
 import lombok.NonNull;
-import team.challenge.MobileStore.dto.CatalogueRequest;
 import team.challenge.MobileStore.model.Catalogue;
 
 import java.util.List;
 
 public interface CatalogueService {
     List<Catalogue> getAll();
-
-
+    Catalogue findById(String catalogueId);
 
     void delete(@NonNull final String catalogId);
 

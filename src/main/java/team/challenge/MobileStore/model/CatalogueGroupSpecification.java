@@ -9,6 +9,6 @@ public class CatalogueGroupSpecification {
 
     private String nameOfGroup;
 
-    private List<String> elementInGroup;
+    private List<String> elementsInGroup;
 
 }

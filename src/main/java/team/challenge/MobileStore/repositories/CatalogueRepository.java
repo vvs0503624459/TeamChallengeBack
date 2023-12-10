@@ -7,5 +7,4 @@ import team.challenge.MobileStore.model.Catalogue;
 @Repository
 public interface CatalogueRepository extends MongoRepository<Catalogue, String> {
 
-    Catalogue findByTitle(String title);
 }
