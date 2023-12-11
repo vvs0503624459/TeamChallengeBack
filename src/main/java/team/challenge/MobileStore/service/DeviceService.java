@@ -2,10 +2,7 @@ package team.challenge.MobileStore.service;
 
 import lombok.NonNull;
 import team.challenge.MobileStore.dto.DeviceRequest;
-import team.challenge.MobileStore.model.Brand;
-import team.challenge.MobileStore.model.Catalogue;
-import team.challenge.MobileStore.model.Device;
-import team.challenge.MobileStore.model.Review;
+import team.challenge.MobileStore.model.*;
 
 import java.util.List;
 import java.util.Map;
@@ -21,4 +18,8 @@ public interface DeviceService {
     void delete(@NonNull final String deviceId);
     void addReviewToDevices(@NonNull final Review review, List<Device> devices);
     void deleteReviewFromDevices(Review review);
+
+    void addQuestionToDevices(@NonNull Question question, List<Device> devices);
+
+    void deleteQuestionFromDevices(Question question);
 }

@@ -3,10 +3,7 @@ package team.challenge.MobileStore.repositories;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
-import team.challenge.MobileStore.model.Brand;
-import team.challenge.MobileStore.model.Catalogue;
-import team.challenge.MobileStore.model.Device;
-import team.challenge.MobileStore.model.Review;
+import team.challenge.MobileStore.model.*;
 
 import java.util.List;
 
@@ -21,5 +18,6 @@ public interface DeviceRepository extends MongoRepository<Device, String> {
 
     List<Device> findAllByCatalogueAndBrand(Catalogue catalog, Brand brand);
     List<Device> findAllByReviews(List<Review> review);
+    List<Device> findAllByQuestions(List<Question> questions);
 
 }

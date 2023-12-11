@@ -1,7 +1,6 @@
 package team.challenge.MobileStore.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -39,6 +38,12 @@ public class ReviewController {
                     content = {
                             @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = ReviewResponse.class))
+                    }),
+            @ApiResponse(responseCode = "404",
+                    description = "Device with present ID not found!",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ApiResponse.class))
                     })
     })
     public List<ReviewResponse> getAllDeviceReviews(@RequestParam(required = true) String deviceId){
@@ -144,7 +149,7 @@ public class ReviewController {
                                                    String userId, Likes mark){
         return ResponseEntity.ok(reviewMapper.mapToReviewResponse(reviewService.giveLike(userId, reviewId, mark)));
     }
-    @Operation(summary = "Take mark to review")
+    @Operation(summary = "Take mark from review")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
                     description = "Take like or dislike to review",

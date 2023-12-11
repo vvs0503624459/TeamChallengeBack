@@ -14,7 +14,6 @@ import java.util.Set;
  */
 public interface ReviewService {
     /**
-     * @param size returned list size.
      * @param deviceId device ID to find reviews.
      * @return list with reviews which contain present device ID with present size.
      */
