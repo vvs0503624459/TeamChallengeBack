@@ -8,7 +8,6 @@ import team.challenge.MobileStore.exception.ModelAlreadyExistException;
 import team.challenge.MobileStore.exception.ModelNotFoundException;
 import team.challenge.MobileStore.model.Catalogue;
 import team.challenge.MobileStore.model.CatalogueGroupSpecification;
-import team.challenge.MobileStore.model.SpecificationGroup;
 import team.challenge.MobileStore.repositories.CatalogueRepository;
 import team.challenge.MobileStore.service.CatalogueService;
 
