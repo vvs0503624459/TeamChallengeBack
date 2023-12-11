@@ -157,5 +157,24 @@ public class DeviceServiceImpl implements DeviceService {
         deviceRepository.saveAll(devices);
     }
 
+    @Override
+    public void addQuestionToDevices(@NonNull Question question, List<Device> devices) {
+        for (Device device :
+                devices) {
+            device.getQuestions().add(question);
+        }
+        deviceRepository.saveAll(devices);
+    }
+
+    @Override
+    public void deleteQuestionFromDevices(Question question) {
+        List<Device> devices = deviceRepository.findAllByQuestions(Collections.singletonList(question));
+        for (Device device :
+                devices) {
+            device.getQuestions().remove(question);
+        }
+        deviceRepository.saveAll(devices);
+    }
+
 
 }
