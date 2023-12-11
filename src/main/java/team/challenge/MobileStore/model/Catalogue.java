@@ -1,19 +1,18 @@
 package team.challenge.MobileStore.model;
 
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import java.util.List;
 
-@Document(collation = "catalogues")
-@Getter
-@Setter
+@Document(collection = "catalogue")
+@Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class Catalogue {
+
     /**
      * Model for catalogue in header
      */
@@ -25,10 +24,10 @@ public class Catalogue {
     @Id
     private String id;
 
-
     /**
-     * title - name of position in header catalogue
+     * title - unique name of Catalogue group in header
      */
+
     @Indexed(unique = true)
     private String title;
 
