@@ -1,7 +1,9 @@
 package team.challenge.MobileStore.model;
 
+import jakarta.validation.constraints.Email;
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
@@ -17,14 +19,11 @@ import java.util.Set;
 public class UserModel  {
     @Id
     private String id;
-    private String email;
+    @Indexed(unique = true)
+    @Email
+    private String username;
     private String password;
-    private String firstname;
-    private String lastname;
-    private String picture;
-    private LocalDateTime lastVisit;
-    private String gender;
-    private List<Address> addresses;
     private Set<RoleModel> roleModels;
+    private AuthProvider provider;
 
 }
