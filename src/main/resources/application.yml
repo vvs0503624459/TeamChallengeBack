@@ -1,7 +1,7 @@
 spring:
   data:
     mongodb:
-      #uri: 'mongodb+srv://Timur:bmxTRq9AaFrUUeZt@teamchallengeshopdb.y1jcew2.mongodb.net/Marketplace?retryWrites=true&w=majority'
+      uri: 'mongodb+srv://Timur:bmxTRq9AaFrUUeZt@teamchallengeshopdb.y1jcew2.mongodb.net/Marketplace?retryWrites=true&w=majority'
       host: localhost
       port: 27017
       username: root
@@ -14,3 +14,5 @@ spring:
 
 jwt:
   secret: "secretkeyforcoinkeeperaplicatio"
+mongock:
+  change-logs-scan-package: team.challenge.MobileStore.db.migration

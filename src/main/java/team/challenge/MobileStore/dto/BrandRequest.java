@@ -1,4 +1,7 @@
 package team.challenge.MobileStore.dto;
 
-public record BrandRequest() {
+public record BrandRequest(
+        String title,
+        String picture
+) {
 }

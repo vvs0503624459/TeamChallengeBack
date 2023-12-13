@@ -9,9 +9,9 @@ import java.util.List;
 
 
 public interface BrandService {
-    List<?> getAll();
-    List<?> getAllByCatalog(@NonNull final Catalogue catalogue);
-    Brand getOne(@NonNull final String id);
+    List<Brand> getAll();
+    Brand getOneById(@NonNull final String id);
+    Brand getOneByTitle(@NonNull final String title);
     void delete(@NonNull String brandId);
     Brand create(@NonNull final BrandRequest brandRequest);
     Brand update(@NonNull final String brandId, @NonNull final BrandRequest brandRequest);
