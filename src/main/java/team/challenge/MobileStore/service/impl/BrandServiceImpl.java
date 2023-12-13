@@ -29,7 +29,7 @@ public class BrandServiceImpl implements BrandService {
 
     @Override
     public Brand getOneByTitle(@NonNull String title) {
-        return brandRepository.findById(title).orElseThrow(()-> new ModelNotFoundException(String.format("Brand with title %s not found!", title)));
+        return brandRepository.findByTitle(title).orElseThrow(()-> new ModelNotFoundException(String.format("Brand with title %s not found!", title)));
     }
 
 
