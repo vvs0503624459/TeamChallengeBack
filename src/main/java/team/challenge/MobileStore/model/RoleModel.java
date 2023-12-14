@@ -7,13 +7,14 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.security.core.GrantedAuthority;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Document
-public class RoleModel  {
+public class RoleModel implements GrantedAuthority {
     @Id
     private String id;
     @Indexed(unique = true)
@@ -21,5 +22,10 @@ public class RoleModel  {
 
     public RoleModel(String roleName) {
         this.roleName = roleName;
+    }
+
+    @Override
+    public String getAuthority() {
+        return "ROLE_" + roleName;
     }
 }
