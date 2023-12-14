@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Document
@@ -25,5 +26,7 @@ public class UserModel  {
     private String password;
     private Set<RoleModel> roleModels;
     private AuthProvider provider;
+    private String customer;
+    private Map<String, Object> attributes;
 
 }
