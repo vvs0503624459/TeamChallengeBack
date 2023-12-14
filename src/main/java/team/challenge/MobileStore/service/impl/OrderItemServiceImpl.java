@@ -13,6 +13,7 @@ import team.challenge.MobileStore.repositories.DeviceRepository;
 import team.challenge.MobileStore.repositories.OrderItemRepository;
 import team.challenge.MobileStore.service.OrderItemService;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -27,20 +28,31 @@ public class OrderItemServiceImpl implements OrderItemService {
 
 
     @Override
-    public OrderItem addOrderItem(String orderId, String deviceId, int quantity) {
-        Optional<Device> device = deviceRepository.findById(deviceId);
+    public OrderItem addOrderItem(Map<String, String> params) {
+        if (params.containsKey("deviceId") && params.containsKey("orderId") && params.containsKey("quantity")) {
+            String deviceId = params.get("deviceId");
+            String orderId = params.get("orderId");
+            int quantity = Integer.parseInt(params.get("quantity"));
+            Optional<Device> device = deviceRepository.findById(deviceId);
 
-        if (device.isPresent()) {
-            OrderItem orderItem = orderItemRepository.save(new OrderItem(device.get(), quantity));
+            if (device.isPresent()) {
+                OrderItem orderItem = orderItemRepository.save(new OrderItem(device.get(), quantity));
 
-            mongoTemplate.update(Order.class)
-                    .matching(Criteria.where("_id").is(orderId))
-                    .apply(new Update().push("orderItems").value(orderItem))
-                    .first();
+                mongoTemplate.update(Order.class)
+                        .matching(Criteria.where("_id").is(orderId))
+                        .apply(
+                                new Update().push("orderItems")
+                                        .value(orderItem)
+                                        .push("price")
+                                        .value(orderItem.getDevice().getPrice() * ((100 - orderItem.getDevice().getDiscount()) * 0.01)))
+                        .first();
 
-            return orderItem;
+                return orderItem;
+            } else {
+                throw new ModelNotFoundException(String.format("Model with such id %s doesn't exist", deviceId));
+            }
         } else {
-            throw new ModelNotFoundException(String.format("Model with such id %s doesn't exist", deviceId));
+            throw new RuntimeException("Bad request");
         }
     }
 

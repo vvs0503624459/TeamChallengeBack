@@ -15,18 +15,19 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Order {
+
     //change name to order
     @Id
     private String id;
 
+    private Customer customer;
+
     @DocumentReference
     private List<OrderItem> orderItems;
 
-    private Customer customer;
-
     private LocalDateTime createdAt;
 
-    private int price;
+    private String price;
 
     private DeliveryType deliveryType;
 
