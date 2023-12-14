@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import team.challenge.MobileStore.model.OrderItem;
 import team.challenge.MobileStore.service.OrderItemService;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/v1/order-items")
 @AllArgsConstructor
@@ -15,11 +17,9 @@ public class OrderItemController {
 
     @GetMapping("/{deviceId}/{orderId}")
     public ResponseEntity<OrderItem> addOrderItem(
-            @PathVariable String deviceId,
-            @PathVariable String orderId,
-            @RequestParam(defaultValue = "1") int quantity
-    ) {
-        return ResponseEntity.ok(orderItemService.addOrderItem(orderId, deviceId, quantity));
+            Map<String, String> params
+            ) {
+        return ResponseEntity.ok(orderItemService.addOrderItem(params));
     }
 
     @DeleteMapping("/{orderItemId}")
