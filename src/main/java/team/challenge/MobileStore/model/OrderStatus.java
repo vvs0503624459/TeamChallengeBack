@@ -1,6 +1,6 @@
 package team.challenge.MobileStore.model;
 
-public enum CartStatus {
+public enum OrderStatus {
 
     Added, Processed, Sent, Taken
 }

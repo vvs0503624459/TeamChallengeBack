@@ -5,19 +5,24 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-@Document("cart")
+@Document("orders")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ShoppingCart {
-
+public class Order {
+    //change name to order
     @Id
     private String id;
 
-    private CartItem cartItem;
+    @DocumentReference
+    private List<OrderItem> orderItems;
+
+    private Customer customer;
 
     private LocalDateTime createdAt;
 
@@ -27,6 +32,6 @@ public class ShoppingCart {
 
     private PaymentType paymentType;
 
-    private CartStatus cartStatus;
+    private OrderStatus orderStatus;
 
 }

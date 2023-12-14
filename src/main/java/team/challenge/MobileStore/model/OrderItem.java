@@ -1,19 +1,19 @@
 package team.challenge.MobileStore.model;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
-@Document("cart_item")
-public class CartItem {
 
+@Document(collection = "order_item")
+public class OrderItem {
 
-    @Id
-    private String id;
-
+    String id;
     @DocumentReference
-    private String deviceId;
+    private Device device;
 
     private int quantity;
+
+    @DocumentReference
+    private Order order;
 
 }
