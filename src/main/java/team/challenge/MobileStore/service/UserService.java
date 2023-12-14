@@ -1,7 +1,10 @@
 package team.challenge.MobileStore.service;
 
 import lombok.NonNull;
-import team.challenge.MobileStore.dto.UserRequest;
+import org.springframework.security.core.userdetails.UserDetails;
+import team.challenge.MobileStore.dto.LoginRequest;
+import team.challenge.MobileStore.dto.SingUpRequest;
+import team.challenge.MobileStore.dto.UserInfoRequest;
 import team.challenge.MobileStore.model.UserModel;
 
 import java.util.List;
@@ -10,9 +13,10 @@ public interface UserService  {
     List<?> getAll();
     UserModel getOneById(@NonNull final String id);
     UserModel getOneByEmail(@NonNull final String email);
-    UserModel create(@NonNull final UserRequest userRequest);
-    UserModel update(@NonNull final UserRequest userRequest);
+    UserModel getOneByPhoneNumber(@NonNull final String phoneNumber);
+    UserModel create(@NonNull final SingUpRequest userRequest);
+    UserModel update(@NonNull final UserInfoRequest userRequest);
     void delete(@NonNull final String id);
-    UserModel getOneByEmailAndPassword(@NonNull final String email, @NonNull final String password);
+    UserDetails getOneByEmailAndPassword(@NonNull final LoginRequest loginRequest);
 
 }
