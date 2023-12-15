@@ -35,6 +35,6 @@ public class Catalogue {
      * groupSpecifications - groups of specifications for device in catalogue
      */
 
-    private List<CatalogueGroupSpecification> groupSpecifications;
+    private List<CatalogueGroup> groupSpecifications;
 
 }
