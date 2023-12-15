@@ -1,8 +1,8 @@
 spring:
   data:
     mongodb:
-      uri: 'mongodb+srv://admin:NeQqQY9LH4HagxhU@shopcluster.fdnshxy.mongodb.net/?retryWrites=true&w=majority'
-      database: teamshopdb
+      uri: ${MONGO_CLOUD_URI}
+      database: ${MONGO_CLOUD_DATABASE}
 
 
 jwt:
