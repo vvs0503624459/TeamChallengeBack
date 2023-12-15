@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import team.challenge.MobileStore.dto.CatalogueResponse;
-import team.challenge.MobileStore.dto.DeviceDtoFull;
 import team.challenge.MobileStore.exception.ApiError;
 import team.challenge.MobileStore.mapper.CatalogueMapper;
 import team.challenge.MobileStore.model.Catalogue;
@@ -30,27 +29,6 @@ public class CatalogueController {
 
 
     @GetMapping
-    @Operation(summary = "Get one Catalogue by id")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",
-                    description = "Found one catalogue by ID",
-                    content = {
-                            @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = CatalogueResponse.class))
-                    }),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Catalogue with present ID not found!",
-                    content = {
-                            @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = ApiError.class))
-                    })
-    })
-    public ResponseEntity<List<CatalogueResponse>> getAllCatalogs() {
-        return ResponseEntity.ok(this.catalogueService.getAll().stream().map(catalogueMapper::mapCatalogueToCatalogueResponse).collect(Collectors.toList()));
-    }
-
-    @GetMapping("/{id}")
     @Operation(summary = "Get all catalogues")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
@@ -62,6 +40,27 @@ public class CatalogueController {
             @ApiResponse(
                     responseCode = "404",
                     description = "Catalogues weren't found",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ApiError.class))
+                    })
+    })
+    public ResponseEntity<List<CatalogueResponse>> getAllCatalogs() {
+        return ResponseEntity.ok(this.catalogueService.getAll().stream().map(catalogueMapper::mapCatalogueToCatalogueResponse).collect(Collectors.toList()));
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Get one Catalogue by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Found one catalogue by ID",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = CatalogueResponse.class))
+                    }),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Catalogue with present ID not found!",
                     content = {
                             @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = ApiError.class))

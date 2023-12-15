@@ -15,7 +15,7 @@ public class OrderItemController {
 
     private OrderItemService orderItemService;
 
-    @GetMapping("/{deviceId}/{orderId}")
+    @GetMapping
     public ResponseEntity<OrderItem> addOrderItem(
             Map<String, String> params
             ) {

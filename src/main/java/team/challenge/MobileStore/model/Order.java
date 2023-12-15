@@ -27,7 +27,7 @@ public class Order {
 
     private LocalDateTime createdAt;
 
-    private String price;
+    private int price;
 
     private DeliveryType deliveryType;
 

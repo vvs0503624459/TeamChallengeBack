@@ -20,7 +20,6 @@ public class CatalogueServiceImpl implements CatalogueService {
 
     private final CatalogueRepository catalogueRepository;
 
-    //todo
 
     @Override
     public List<Catalogue> getAll() {

@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface OrderService {
 
-    Order createOrder(Customer customer, DeliveryType deliveryType, PaymentType paymentType, OrderStatus orderStatus);
+    Order createOrder(Customer customer, String deliveryType, String paymentType);
 
     List<Order> getAllOrders();
 
@@ -14,4 +14,5 @@ public interface OrderService {
 
     void deleteOrder(String orderId);
 
+    Order getOneOrderById(String orderId);
 }
