@@ -2,7 +2,7 @@ package team.challenge.MobileStore.service;
 
 import lombok.NonNull;
 import team.challenge.MobileStore.model.Catalogue;
-import team.challenge.MobileStore.model.CatalogueGroupSpecification;
+import team.challenge.MobileStore.model.CatalogueGroup;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ public interface CatalogueService {
 
     Catalogue findById(@NonNull final String catalogueId);
 
-    CatalogueGroupSpecification getCatalogGroupSpecificationByCatalogueIdAndCatalogueGroupSpecificationName(@NonNull final String catalogueId, @NonNull final String catalogueGroupSpecificationName);
+    CatalogueGroup getCatalogGroupSpecificationByCatalogueIdAndCatalogueGroupSpecificationName(@NonNull final String catalogueId, @NonNull final String catalogueGroupSpecificationName);
 
     void delete(@NonNull final String catalogId);
 

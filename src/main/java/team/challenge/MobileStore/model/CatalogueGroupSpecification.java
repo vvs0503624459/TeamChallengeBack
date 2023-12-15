@@ -1,15 +1,18 @@
 package team.challenge.MobileStore.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.Map;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class CatalogueGroupSpecification {
 
-    private String nameOfGroup;
+    private String title;
 
-    private List<String> elementsInGroup;
+    private Map<String, String> hashTagsOfTitle;
 
 }
-//{$and: [{"_id": ObjectId("65759b9b60e60a1595806c70")}, {'groupSpecifications' : {$elemMatch: {'nameOfGroup': 'Apple'}}}]}

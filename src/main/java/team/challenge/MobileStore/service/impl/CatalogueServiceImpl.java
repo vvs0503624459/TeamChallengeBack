@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import team.challenge.MobileStore.exception.ModelAlreadyExistException;
 import team.challenge.MobileStore.exception.ModelNotFoundException;
 import team.challenge.MobileStore.model.Catalogue;
-import team.challenge.MobileStore.model.CatalogueGroupSpecification;
+import team.challenge.MobileStore.model.CatalogueGroup;
 import team.challenge.MobileStore.repositories.CatalogueRepository;
 import team.challenge.MobileStore.service.CatalogueService;
 
@@ -33,12 +33,12 @@ public class CatalogueServiceImpl implements CatalogueService {
     }
 
     @Override
-    public CatalogueGroupSpecification getCatalogGroupSpecificationByCatalogueIdAndCatalogueGroupSpecificationName(@NonNull String catalogueId, @NonNull String catalogueGroupSpecificationName) {
+    public CatalogueGroup getCatalogGroupSpecificationByCatalogueIdAndCatalogueGroupSpecificationName(@NonNull String catalogueId, @NonNull String catalogueGroupSpecificationName) {
         Catalogue catalogueById = getCatalogueById(catalogueId);
-        List<CatalogueGroupSpecification> listCatalogueGroupSpecifications = catalogueById.getGroupSpecifications();
-        for (CatalogueGroupSpecification catalogueGroupSpecification : listCatalogueGroupSpecifications) {
-            if (catalogueGroupSpecification.getNameOfGroup().equals(catalogueGroupSpecificationName)) {
-                return catalogueGroupSpecification;
+        List<CatalogueGroup> listCatalogueGroups = catalogueById.getGroupSpecifications();
+        for (CatalogueGroup catalogueGroup : listCatalogueGroups) {
+            if (catalogueGroup.getNameOfGroup().equals(catalogueGroupSpecificationName)) {
+                return catalogueGroup;
             }
         }
         throw new ModelNotFoundException(String.format("Catalogue group with this name: %s wasn't found", catalogueGroupSpecificationName));
