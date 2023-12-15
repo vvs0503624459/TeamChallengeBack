@@ -1,16 +1,8 @@
 spring:
   data:
     mongodb:
-      #uri: 'mongodb+srv://Timur:bmxTRq9AaFrUUeZt@teamchallengeshopdb.y1jcew2.mongodb.net/${}?retryWrites=true&w=majority'
-      host: localhost
-      port: 27017
-      username: root
-      password: '1504'
-      database: timurdb
-      authentication-database: admin
-
-      #uri: "mongodb://root:1504@localhost:27017/timurdb/?authSource=admin"
-
+      uri: 'mongodb+srv://admin:NeQqQY9LH4HagxhU@shopcluster.fdnshxy.mongodb.net/?retryWrites=true&w=majority'
+      database: teamchopdb
 
 jwt:
   secret: "secretkeyforcoinkeeperaplicatio"
