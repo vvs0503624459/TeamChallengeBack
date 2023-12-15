@@ -2,7 +2,9 @@ package team.challenge.MobileStore.controller;
 
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -60,7 +62,19 @@ public class DeviceController {
 
 
     @GetMapping()
-    public List<DeviceDtoShort> getAllWithSizeFromCatalogAndBrand(@RequestParam Map<String, String> param)
+    public List<DeviceDtoShort> getAll(
+            @RequestParam
+                    @Parameter(name = "params", examples = {@ExampleObject(name = "Map desc", value = "'key': 'value'", description = "Map structure."),
+                    @ExampleObject(name = "Params example" , value = """
+                            'catalogue': 'smartphones'
+                            'brand': 'apple'
+                            'series': 'iphone 14 pro'""",
+                    description = "Example with parameters.")},
+                    description = "Parameters that are necessary for the operation of the catalog and filters for obtaining the desired list of devices. " +
+                            "If you do not specify the parameters, you will receive all the devices that are in the database.",
+                    required = false
+                    )
+            Map<String, String> param)
             {
                 return deviceMapper.mapToDeviceShortDtoList(deviceService.getAll(param));
 

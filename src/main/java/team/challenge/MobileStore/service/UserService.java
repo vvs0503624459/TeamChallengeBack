@@ -2,6 +2,7 @@ package team.challenge.MobileStore.service;
 
 import lombok.NonNull;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import team.challenge.MobileStore.dto.LoginRequest;
 import team.challenge.MobileStore.dto.SingUpRequest;
 import team.challenge.MobileStore.dto.UserInfoRequest;
@@ -9,7 +10,7 @@ import team.challenge.MobileStore.model.UserModel;
 
 import java.util.List;
 
-public interface UserService  {
+public interface UserService  extends UserDetailsService {
     List<?> getAll();
     UserModel getOneById(@NonNull final String id);
     UserModel getOneByEmail(@NonNull final String email);
