@@ -37,7 +37,7 @@ public class TokenProvider {
                 .sign(this.hmac512);
     }
 
-    public String validateToken(String token){
+    public String validateTokenAndGetId(String token){
         try{
             return verifier.verify(token).getSubject();
         } catch (JWTVerificationException e){
