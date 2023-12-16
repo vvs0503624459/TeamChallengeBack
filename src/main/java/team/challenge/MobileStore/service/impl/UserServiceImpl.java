@@ -3,12 +3,11 @@ package team.challenge.MobileStore.service.impl;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import team.challenge.MobileStore.dto.LoginRequest;
-import team.challenge.MobileStore.dto.SingUpRequest;
+import team.challenge.MobileStore.dto.SignUpRequest;
 import team.challenge.MobileStore.dto.UserInfoRequest;
 import team.challenge.MobileStore.exception.AuthException;
 import team.challenge.MobileStore.exception.ModelNotFoundException;
@@ -50,7 +49,7 @@ public class UserServiceImpl implements UserService  {
     }
 
     @Override
-    public UserModel create(@NonNull SingUpRequest userRequest) {
+    public UserModel create(@NonNull SignUpRequest userRequest) {
         /*
         1. check if email is already exist
         2. find customer with present email or create new customer

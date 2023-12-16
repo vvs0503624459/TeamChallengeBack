@@ -4,7 +4,7 @@ import lombok.NonNull;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import team.challenge.MobileStore.dto.LoginRequest;
-import team.challenge.MobileStore.dto.SingUpRequest;
+import team.challenge.MobileStore.dto.SignUpRequest;
 import team.challenge.MobileStore.dto.UserInfoRequest;
 import team.challenge.MobileStore.model.UserModel;
 
@@ -15,7 +15,7 @@ public interface UserService  extends UserDetailsService {
     UserModel getOneById(@NonNull final String id);
     UserModel getOneByEmail(@NonNull final String email);
     UserModel getOneByPhoneNumber(@NonNull final String phoneNumber);
-    UserModel create(@NonNull final SingUpRequest userRequest);
+    UserModel create(@NonNull final SignUpRequest userRequest);
     UserModel update(@NonNull final UserInfoRequest userRequest);
     void delete(@NonNull final String id);
     UserDetails getOneByEmailAndPassword(@NonNull final LoginRequest loginRequest);

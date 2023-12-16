@@ -1,8 +1,6 @@
 package team.challenge.MobileStore.dto;
 
-import javax.annotation.RegEx;
-
-public record SingUpRequest(
+public record SignUpRequest(
         String firstname,
         String lastname,
         String phoneNumber,
