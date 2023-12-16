@@ -1,18 +1,21 @@
+#spring:
+#  data:
+#    mongodb:
+#      uri: 'mongodb+srv://Timur:bmxTRq9AaFrUUeZt@teamchallengeshopdb.y1jcew2.mongodb.net/Marketplace?retryWrites=true&w=majority'
+#      host: localhost
+#      port: 27017
+#      username: root
+#      password: '1504'
+#      database: timurdb
+#      authentication-database: admin
+#
+#      #uri: "mongodb://root:1504@localhost:27017/timurdb/?authSource=admin"
+#
+#
+#jwt:
+#  secret: "secretkeyforcoinkeeperaplicatio"
+#mongock:
+#  change-logs-scan-package: team.challenge.MobileStore.db.migration
 spring:
-  data:
-    mongodb:
-      uri: 'mongodb+srv://Timur:bmxTRq9AaFrUUeZt@teamchallengeshopdb.y1jcew2.mongodb.net/Marketplace?retryWrites=true&w=majority'
-      host: localhost
-      port: 27017
-      username: root
-      password: '1504'
-      database: timurdb
-      authentication-database: admin
-
-      #uri: "mongodb://root:1504@localhost:27017/timurdb/?authSource=admin"
-
-
-jwt:
-  secret: "secretkeyforcoinkeeperaplicatio"
-mongock:
-  change-logs-scan-package: team.challenge.MobileStore.db.migration
+  profiles:
+    active:
