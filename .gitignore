@@ -5,9 +5,8 @@ target/
 !**/src/test/**/target/
 src/main/resources/credentials/*
 src/main/resources/cloudinary-configure.yaml
-src/main/resources/application-dev.yaml
-src/main/resources/application-prod.yaml
-credentials.env
+src/main/resources/*.yaml
+.env
 
 ### STS ###
 .apt_generated
