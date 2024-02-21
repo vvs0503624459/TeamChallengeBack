@@ -10,6 +10,7 @@ import team.challenge.MobileStore.dto.LoginRequest;
 import team.challenge.MobileStore.dto.SignUpRequest;
 import team.challenge.MobileStore.dto.UserInfoRequest;
 import team.challenge.MobileStore.exception.AuthException;
+import team.challenge.MobileStore.exception.ModelAlreadyExistException;
 import team.challenge.MobileStore.exception.ModelNotFoundException;
 import team.challenge.MobileStore.model.AuthProvider;
 import team.challenge.MobileStore.model.RoleModel;
@@ -19,6 +20,7 @@ import team.challenge.MobileStore.repositories.UserRepository;
 import team.challenge.MobileStore.service.UserService;
 import team.challenge.MobileStore.util.StringUtil;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 @Service
@@ -58,8 +60,10 @@ public class UserServiceImpl implements UserService  {
          */
         try{
             getOneByEmail(userRequest.email());
+            throw new ModelAlreadyExistException("User with present email is already exist");
         } catch (ModelNotFoundException e){
-            RoleModel roleUser = roleRepository.findByRoleName("USER").orElse(roleRepository.save(new RoleModel("ROLE")));
+            RoleModel roleUser = roleRepository.findByRoleName("USER").orElse(new RoleModel("USER"));
+            roleUser = roleRepository.save(roleUser);
             String hash = passwordEncoder.encode(userRequest.password());
             UserModel newUser = UserModel.builder()
                     .phoneNumber(userRequest.phoneNumber())
@@ -67,10 +71,12 @@ public class UserServiceImpl implements UserService  {
                     .password(hash)
                     .provider(AuthProvider.local)
                     .roles(Collections.singleton(roleUser))
+                    .isPhoneNumberConfirmed(false)
+                    .isPhoneNumberConfirmed(false)
+                    .creatingDate(LocalDateTime.now())
                     .build();
+            return userRepository.save(newUser);
         }
-
-        return null;
     }
 
     @Override
@@ -84,18 +90,15 @@ public class UserServiceImpl implements UserService  {
     }
 
     @Override
-    public UserDetails getOneByEmailAndPassword(@NonNull LoginRequest loginRequest) {
+    public UserModel getOneByEmailAndPassword(@NonNull LoginRequest loginRequest) {
         UserModel currentUser;
         if (StringUtil.isValidEmail(loginRequest.username())){
             currentUser = getOneByEmail(loginRequest.username());
-        } else if (StringUtil.isValidPhoneNumber(loginRequest.username())){
-            currentUser = getOneByPhoneNumber(loginRequest.username());
         } else {
             throw new AuthException("Invalid username!");
         }
-//        if (passwordEncoder.matches(loginRequest.password(), currentUser.getPassword())){
-        if (true){
-            return loadUserByUsername(currentUser.getUsername());
+        if (passwordEncoder.matches(loginRequest.password(), currentUser.getPassword())){
+            return getOneByEmail(currentUser.getUsername());
         } else{
             throw new AuthException("Invalid password!");
         }

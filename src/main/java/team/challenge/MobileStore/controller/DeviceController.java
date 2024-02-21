@@ -10,14 +10,21 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import team.challenge.MobileStore.dto.DeviceDtoFull;
 import team.challenge.MobileStore.dto.DeviceDtoShort;
+import team.challenge.MobileStore.dto.DeviceGroupDto;
+import team.challenge.MobileStore.dto.DeviceRequest;
 import team.challenge.MobileStore.exception.ApiError;
 import team.challenge.MobileStore.mapper.DeviceMapper;
+import team.challenge.MobileStore.model.Device;
 import team.challenge.MobileStore.service.DeviceService;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +33,7 @@ import java.util.Map;
  */
 @Tag(name = "Device endpoints", description = "HTTP device methods")
 @RestController
-@RequestMapping("/api/v1/devises")
+@RequestMapping("/api/v1/devices")
 @RequiredArgsConstructor
 public class DeviceController {
 
@@ -62,13 +69,19 @@ public class DeviceController {
 
 
     @GetMapping()
-    public List<DeviceDtoShort> getAll(
+    public Page<DeviceDtoShort> getAll(
             @RequestParam
-                    @Parameter(name = "params", examples = {@ExampleObject(name = "Map desc", value = "'key': 'value'", description = "Map structure."),
+                    @Parameter(name = "params", examples = {@ExampleObject(name = "Map desc", value = """
+                            {
+                                'key': 'value'
+                            }
+                            """, description = "Map structure."),
                     @ExampleObject(name = "Params example" , value = """
-                            'catalogue': 'smartphones'
-                            'brand': 'apple'
-                            'series': 'iphone 14 pro'""",
+                            {
+                                'catalogue': 'catalogueId'
+                                'brand': 'brandId'
+                                'series': 'series value'
+                            }""",
                     description = "Example with parameters.")},
                     description = "Parameters that are necessary for the operation of the catalog and filters for obtaining the desired list of devices. " +
                             "If you do not specify the parameters, you will receive all the devices that are in the database.",
@@ -76,7 +89,7 @@ public class DeviceController {
                     )
             Map<String, String> param)
             {
-                return deviceMapper.mapToDeviceShortDtoList(deviceService.getAll(param));
+                return deviceMapper.mapToDeviceDtoShortPage(deviceService.getAll(param));
 
     }
 
@@ -98,27 +111,98 @@ public class DeviceController {
                                     schema = @Schema(implementation = ApiError.class))
                     })
     })
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<?> deleteDeviceById(@PathVariable String id) {
         deviceService.delete(id);
         return ResponseEntity.noContent().build();
     }
+    @Operation(summary = "Get device list for main page.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Get grouped list of devices",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = DeviceGroupDto.class))
+                    })
+    })
+    @GetMapping("/main-page")
+    public List<DeviceGroupDto> geDevicesForMainPage(){
+        return deviceMapper.mapToDeviceList(deviceService.getGroupedDevices());
+    }
 
-//    /**
-//     * @param deviceRequest - information about phone that was put by user
-//     * @return json file with all information about created phone
-//     */
-//    @PostMapping
-//    public ResponseEntity<DeviceDtoFull> createDevice(@RequestBody DeviceRequest deviceRequest) {
-//        return ResponseEntity.ok(this.deviceService.create(deviceRequest));
-//    }
-//
-//    /**
-//     * @param id - unique id of phone
-//     * @param deviceRequest - updated device
-//     * @return json file with all information about updated phone
-//     */
-//    @PutMapping("/{id}")
-//    public ResponseEntity<?> updateDeviceById(@PathVariable String id, @RequestBody DeviceRequest deviceRequest) {
-//        return ResponseEntity.ok(this.deviceService.update(id, deviceRequest));
-//    }
+    /**
+     * @param deviceRequest - information about phone that was put by user
+     * @return json file with all information about created phone
+     */
+    @Operation(summary = "Create new device.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201",
+            description = "DTO with information about created device.",
+            content = {
+                    @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = DeviceDtoFull.class))
+            }),
+            @ApiResponse(responseCode = "404",
+                    description = "Brand or catalogue with present IDs not found!",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ApiError.class))
+                    }),
+            @ApiResponse(responseCode = "401",
+                    description = "Only ADMIN can create new devices!",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ApiError.class))
+                    })
+    })
+    @PostMapping
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<DeviceDtoFull> createDevice(@RequestBody DeviceRequest deviceRequest) {
+        Device device = deviceService.create(deviceRequest);
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("{id}")
+                .buildAndExpand(device.getId())
+                .toUri();
+        return ResponseEntity.created(location).body(deviceMapper.mapToFullDto(device));
+    }
+
+    /**
+     * @param id - unique id of phone
+     * @param deviceRequest - updated device
+     * @return json file with all information about updated phone
+     */
+    @Operation(summary = "Update exist device.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "DTO with information about updated device.",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = DeviceDtoFull.class))
+                    }),
+            @ApiResponse(responseCode = "404",
+                    description = "Device with present IDs not found!",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ApiError.class))
+                    }),
+            @ApiResponse(responseCode = "404",
+                    description = "Brand or catalogue with present IDs not found!",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ApiError.class))
+                    }),
+            @ApiResponse(responseCode = "401",
+                    description = "Only ADMIN can create new devices!",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ApiError.class))
+                    })
+    })
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<DeviceDtoFull> updateDeviceById(@PathVariable String id, @RequestBody DeviceRequest deviceRequest) {
+        Device device = deviceService.update(id, deviceRequest);
+        return ResponseEntity.ok(deviceMapper.mapToFullDto(device));
+    }
 }

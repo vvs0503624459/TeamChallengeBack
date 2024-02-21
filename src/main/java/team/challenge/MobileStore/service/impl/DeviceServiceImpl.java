@@ -2,6 +2,10 @@ package team.challenge.MobileStore.service.impl;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
@@ -10,14 +14,16 @@ import team.challenge.MobileStore.exception.ModelNotFoundException;
 import team.challenge.MobileStore.model.*;
 import team.challenge.MobileStore.repositories.DeviceCriteriaRepository;
 import team.challenge.MobileStore.repositories.DeviceRepository;
+import team.challenge.MobileStore.service.BrandService;
+import team.challenge.MobileStore.service.CatalogueService;
 import team.challenge.MobileStore.service.DeviceService;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class DeviceServiceImpl implements DeviceService {
-
     private static final String CATALOGUE = "catalogue";
     private static final String BRAND = "brand";
     private static final String PRICE = "price";
@@ -25,15 +31,27 @@ public class DeviceServiceImpl implements DeviceService {
     private static final String SPECIFICATION = "specificationGroups.specifications";
     private final DeviceRepository deviceRepository;
     private final DeviceCriteriaRepository deviceCriteriaRepository;
+    private final BrandService brandService;
+    private final CatalogueService catalogueService;
     @Override
-    public List<Device> getAll(Map<String, String> params) {
-        if (params.isEmpty() ) {
-            return deviceRepository.findAll();
+    public Page<Device> getAll(Map<String, String> params) {
+        int page = 1;
+        int size = 20;
+        if (params.containsKey("page") && params.containsKey("size")){
+            page = Integer.parseInt(params.get("page"));
+            size = Integer.parseInt(params.get("size"));
+        }
+        PageRequest pageRequest = PageRequest.of(page -1, size);
+        if (params.isEmpty() || (params.size() == 2 && (params.containsKey("page") && params.containsKey("size")))) {
+            return deviceRepository.findAll(pageRequest);
         }
         List<Criteria> criteriaList = new ArrayList<>();
         for (Map.Entry<String, String> entry: params.entrySet()){
             switch (entry.getKey()){
-                case "catalogue" -> criteriaList.add(createCriteriaIs(CATALOGUE, entry.getValue()));
+                case "catalogue" -> {
+                    ObjectId id = new ObjectId(entry.getValue());
+                    criteriaList.add(createCriteriaIs(CATALOGUE, id));
+                }
                 case "brand" -> {
                     List<String> paramList = List.of(entry.getValue().split(","));
                     criteriaList.add(createCriteriaIn(BRAND, paramList));
@@ -58,6 +76,9 @@ public class DeviceServiceImpl implements DeviceService {
 
                 }
                 default -> {
+                    if (entry.getKey().equals("page") || entry.getKey().equals("size")){
+                        continue;
+                    }
                     List<String> paramList = List.of(entry.getValue().split(","));
                     if (paramList.size() == 1) {
                         criteriaList.add(Criteria.where(SPECIFICATION).elemMatch(createCriteriaIs("value", entry.getValue())));
@@ -67,35 +88,15 @@ public class DeviceServiceImpl implements DeviceService {
                 }
             }
         }
-        return deviceCriteriaRepository.findAll(new Query().addCriteria(new Criteria().andOperator(criteriaList)));
-//        if (params.containsKey("catalogue")) {
-//            criteriaList.add(Criteria.where("catalogue").is(params.get("catalogueId")));
-//        } else if (params.containsKey("brand")) {
-//            criteriaList.add(Criteria.where("brand").is(params.get("catalogueId")));
-//        } else if (params.containsKey("price")) {
-//            String[] prices = params.get("price").split("-");
-//            criteriaList.add(Criteria.where("price").gte(prices[0]).lte(prices[1]));
-//        } else {
-//            params.forEach((key, val) -> {
-//                if (key.equals("catalogueId") || key.equals("brandId") || key.equals("price")){
-//                    return;
-//                }
-//                List<String> sameParams = List.of(val.split(","));
-//                if (sameParams.size() == 1){
-//                    criteriaList.add(Criteria.where("specificationGroups.specifications").is(val));
-//                } else {
-//                    criteriaList.add(Criteria.where("specificationGroups.specifications").in(sameParams));
-//                }
-//            });
-//        }
+        return deviceCriteriaRepository.findAll(new Query().addCriteria(new Criteria().andOperator(criteriaList)), pageRequest);
     }
 
 
-    private Criteria createCriteriaIs(String key, String param){
+    private Criteria createCriteriaIs(String key, Object param){
         return Criteria.where(key).is(param);
     }
     private Criteria createCriteriaIn(String key, List<String> params){
-        return Criteria.where(key).in(params);
+        return key.equals("brand") ? Criteria.where(key).in(params.stream().map(ObjectId::new).toList()) : Criteria.where(key).in(params);
     }
     private Criteria createCriteriaBetween(String key, String firstValue, String secondValue){
         return Criteria.where(key).gte(firstValue).lte(secondValue);
@@ -108,14 +109,14 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public List<Device> getAllWithSameColor(@NonNull String deviceId, @NonNull String color) {
-        String deviceSeries = getOne(deviceId).getSpecificationValue("series");
-        return deviceRepository.getAllBySeriesAndColor(deviceSeries, color);
+        String deviceSeries = getOne(deviceId).getSpecificationValue("Series");
+        return deviceRepository.getAllBySeriesAndColor(deviceSeries, color).stream().filter(device -> !device.getId().equals(deviceId)).toList();
     }
 
     @Override
     public List<Device> getAllWithSameMemory(@NonNull String deviceId, @NonNull String internalMemory) {
-        String deviceSeries = getOne(deviceId).getSpecificationValue("series");
-        return deviceRepository.getAllBySeriesAndInternalMemory(deviceSeries, internalMemory);
+        String deviceSeries = getOne(deviceId).getSpecificationValue("Series");
+        return deviceRepository.getAllBySeriesAndInternalMemory(deviceSeries, internalMemory).stream().filter(device -> !device.getId().equals(deviceId)).toList();
     }
 
     @Override
@@ -125,12 +126,53 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public Device create(@NonNull DeviceRequest deviceRequest) {
-        return null;
+        Brand brand = brandService.getOneById(deviceRequest.brandId());
+        Catalogue catalogue = catalogueService.findById(deviceRequest.catalogueId());
+        Device device = Device.builder()
+                .id(new ObjectId().toString())
+                .brand(brand)
+                .catalogue(catalogue)
+                .uriMainPhoto(deviceRequest.uriMainPhoto())
+                .uriPhotos(deviceRequest.photosUri())
+                .price(deviceRequest.price())
+                .discount(deviceRequest.discount())
+                .skuCode(deviceRequest.skuCode())
+                .presentations(deviceRequest.presentation())
+                .specificationGroups(deviceRequest.specificationGroups())
+                .isLeader(deviceRequest.isLeader())
+                .creatingDate(LocalDateTime.now())
+                .build();
+        String deviceId= device.getId();
+        List<Review> reviews = new ArrayList<>();
+        List<Question> questions = new ArrayList<>();
+        String memory = device.getSpecificationValue("internal memory");
+        List<Device> sameDevices = getAllWithSameMemory(device.getId(), memory).stream()
+                .filter(d -> !d.getId().equals(deviceId)).toList();
+        if (sameDevices.size() != 0){
+            reviews = sameDevices.get(0).getReviews();
+            questions = sameDevices.get(0).getQuestions();
+        }
+        device.setReviews(reviews);
+        device.setQuestions(questions);
+        return deviceRepository.save(device);
     }
 
     @Override
     public Device update(@NonNull String deviceId, @NonNull DeviceRequest deviceRequest) {
-        return null;
+        Device deviceFromDb = getOne(deviceId);
+        Brand brand = brandService.getOneById(deviceRequest.brandId());
+        Catalogue catalogue = catalogueService.findById(deviceRequest.catalogueId());
+        deviceFromDb.setUriMainPhoto(deviceRequest.uriMainPhoto());
+        deviceFromDb.setCatalogue(catalogue);
+        deviceFromDb.setBrand(brand);
+        deviceFromDb.setSkuCode(deviceRequest.skuCode());
+        deviceFromDb.setPrice(deviceRequest.price());
+        deviceFromDb.setDiscount(deviceRequest.discount());
+        deviceFromDb.setUriPhotos(deviceRequest.photosUri());
+        deviceFromDb.setPresentations(deviceRequest.presentation());
+        deviceFromDb.setSpecificationGroups(deviceRequest.specificationGroups());
+        deviceFromDb.setIsLeader(deviceRequest.isLeader());
+        return deviceRepository.save(deviceFromDb);
     }
 
     @Override
@@ -176,5 +218,21 @@ public class DeviceServiceImpl implements DeviceService {
         deviceRepository.saveAll(devices);
     }
 
-
+    @Override
+    public Map<String , List<Device>>  getGroupedDevices() {
+        Map<String, List<Device>> resultMap = new HashMap<>();
+        List<Device> bestPrices = deviceRepository.findAll(Sort.by(Sort.Order.desc("discount")))
+                .stream()
+                .limit(10)
+                .toList();
+        if (!bestPrices.isEmpty()) resultMap.put("The best price offers", bestPrices);
+        List<Device> leaders = deviceRepository.findAllByIsLeaderTrue().stream().limit(10).toList();
+        if (!leaders.isEmpty()) resultMap.put("Sales leader", leaders);
+        List<Device> newProducts = deviceRepository.findAll(Sort.by(Sort.Order.asc("creatingDate")))
+                .stream()
+                .limit(10)
+                .toList();
+        if (!newProducts.isEmpty()) resultMap.put("New products", newProducts);
+        return resultMap;
+    }
 }
